@@ -8,6 +8,7 @@ import {ABasicSceneModel} from "../../../anigraph/starter";
 import {AddExampleControlPanelSpecs} from "../../../ControlPanelExamples";
 import {BaseSceneModel} from "../../HelperClasses";
 import {CustomNode1Model} from "../Nodes/CustomNode1";
+import {UpdateGUIJSX, UpdateGUIJSXWithCameraPosition} from "../../Examples/GUIHelpers";
 
 /**
  * This is your Main Model class. The scene model is the main data model for your application. It is the root for a
@@ -32,7 +33,13 @@ export class MainSceneModel extends BaseSceneModel{
         /**
          * The function below shows exampled of very general ways to use app state and the control panel.
          */
-        AddExampleControlPanelSpecs(this);
+        // AddExampleControlPanelSpecs(this);
+
+        /**
+         * Optionally, you can add functions that will tell what should be displayed in the React portion of the GUI. Note that the functions must return JSX code, which means they need to be written in a .tsx file. That's why we've put them in a separate file.
+         */
+        // appState.setReactGUIContentFunction(UpdateGUIJSX);
+        // appState.setReactGUIBottomContentFunction(UpdateGUIJSXWithCameraPosition);
 
     }
 
@@ -82,8 +89,9 @@ export class MainSceneModel extends BaseSceneModel{
         }
 
         /**
-         * Update stuff here
+         * If you want to update the react GUI components
          */
+        // GetAppState().updateComponents();
 
     }
 };

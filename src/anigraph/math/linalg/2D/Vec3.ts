@@ -133,8 +133,8 @@ export class Vec3 extends VectorBase {
     return new this(vec.x, vec.y, vec.z);
   }
 
-  sstring() {
-    return `[${this.x},${this.y},${this.z}]`;
+  sstring(precision?:number) {
+    return `[${this.x.toPrecision(precision)},${this.y.toPrecision(precision)},${this.z.toPrecision(precision)}]`;
   }
 
   asThreeJS() {

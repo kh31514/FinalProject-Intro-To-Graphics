@@ -16,6 +16,10 @@ export class LoadedCharacterModel extends ALoadedModel implements CharacterModel
         this.transform.position = value;
     }
 
+    get worldPosition(){
+        return this.getWorldTransform().getPosition();
+    }
+
     _characterColor!:Color;
     /** Get set characterColor */
     getCharacterColor(){

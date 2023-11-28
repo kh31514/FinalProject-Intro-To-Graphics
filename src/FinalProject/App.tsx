@@ -1,7 +1,7 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
 import React, {useEffect, useState} from "react";
-import {MainComponent, GUIComponent, Layout, FullLayout} from "./Component";
+import {MainComponent, GUIComponent, Layout, FullLayout, GUIBottomComponent} from "./Component";
 import {AppState, CreateAppState, ControlPanel} from "../anigraph";
 
 
@@ -44,6 +44,12 @@ function App() {
                                 <GUIComponent appState={appState}>
                                 </GUIComponent>
                             </MainComponent>
+                        </div>
+                    </div>
+                    <div className={"row"}>
+                        <div className={`col-${appState.getState("CanvasColumnSize")??10} anigraph-component-container`}>
+                            <GUIBottomComponent appState={appState}>
+                            </GUIBottomComponent>
                         </div>
                     </div>
                 </div>

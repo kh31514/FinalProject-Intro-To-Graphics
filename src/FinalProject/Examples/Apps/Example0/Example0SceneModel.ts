@@ -12,11 +12,15 @@ import {
 } from "../../../../anigraph";
 import {ExampleSceneModel} from "../ExampleSceneModel";
 import {BillboardParticleSystemModel, ExampleParticleSystemModel} from "../../Nodes";
+import {UpdateGUIJSX, UpdateGUIWithBots} from "../../GUIHelpers";
 
 export class Example0SceneModel extends ExampleSceneModel {
     playerParticleSystemModel!:ExampleParticleSystemModel;
     initAppState(appState: AppState): void {
         BillboardParticleSystemModel.AddParticleSystemControls();
+
+        appState.setReactGUIContentFunction(UpdateGUIJSX);
+        appState.setReactGUIBottomContentFunction(UpdateGUIWithBots);
     }
 
     async PreloadAssets() {
@@ -86,6 +90,17 @@ export class Example0SceneModel extends ExampleSceneModel {
          * Update the bots
          */
         this.timeUpdateOrbitBots(t);
+
+
+        /**
+         * Update stuff here
+         */
+
+        /**
+         * Optionally update the React GUI every frame
+         */
+        GetAppState().updateComponents();
+
     }
 
     getCoordinatesForCursorEvent(event: AInteractionEvent){

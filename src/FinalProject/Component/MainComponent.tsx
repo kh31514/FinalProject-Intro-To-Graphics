@@ -17,8 +17,6 @@ export function MainComponent(props: VisualizationComponentProps) {
                 <div className={"card-body"}>
                     <AThreeJSContextComponent renderWindow={props.renderWindow}/>
                 </div>
-                <div className={"card-body scene-description"}>
-                </div>
             </div>
     )
 }

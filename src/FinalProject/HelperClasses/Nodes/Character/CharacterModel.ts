@@ -28,6 +28,11 @@ export class CharacterModel extends ANodeModel3D implements CharacterInterface{
 
     mass:number=1;
     velocity:Vec3 = V3();
+
+    get worldPosition(){
+        return this.getWorldTransform().getPosition();
+    }
+
     get position(){
         return this.transform.position;
     }

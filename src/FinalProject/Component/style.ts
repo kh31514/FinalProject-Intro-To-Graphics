@@ -43,6 +43,7 @@ export const Layout = styled.div`
   }
   .card{
     height: 90%;
+    border: none;
   }
   .anigraphcontainer{
     max-height: 95%;

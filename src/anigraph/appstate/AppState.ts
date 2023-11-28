@@ -39,6 +39,7 @@ export class AppState extends AAppState{
 
 
     _getReactGUIContent!:(props:{appState:AppState})=>any;
+    _getReactGUIBottomContent!:(props:{appState:AppState})=>any;
 
     getReactGUIContent(){
         if(this._getReactGUIContent !== undefined){
@@ -46,11 +47,22 @@ export class AppState extends AAppState{
         }else{
             return undefined;
         }
+    }
 
+    getReactGUIBottomContent(){
+        if(this._getReactGUIBottomContent !== undefined){
+            return this._getReactGUIBottomContent({appState: this});
+        }else{
+            return undefined;
+        }
     }
 
     setReactGUIContentFunction(func:(props:{appState:any})=>any){
         this._getReactGUIContent=func;
+    }
+
+    setReactGUIBottomContentFunction(func:(props:{appState:any})=>any){
+        this._getReactGUIBottomContent=func;
     }
 
     get mainRenderWindow(){
