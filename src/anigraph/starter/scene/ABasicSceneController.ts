@@ -146,9 +146,8 @@ export abstract class ABasicSceneController extends ASceneController {
     }
 
 
-    initInteractions(){
+    addInteractionModeAppState(){
         const self = this;
-        self.setCurrentInteractionMode();
         this.subscribeToAppState(INTERACTION_MODE_APP_STATE, (v:string)=>{
             /**
              * Call _setCurrentInteractionMode here, which just calls the parent version of the function.
@@ -156,6 +155,11 @@ export abstract class ABasicSceneController extends ASceneController {
              */
             self._silentSetCurrentInteractionMode(v);
         }, INTERACTION_MODE_APP_STATE)
+    }
+
+    initInteractions(){
+        this.setCurrentInteractionMode();
+        this.addInteractionModeAppState();
         this.addDebugInteractionMode();
     }
 

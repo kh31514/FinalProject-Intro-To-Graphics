@@ -81,8 +81,13 @@ export class VertexArray3D extends VertexArray<Vec3> {
     this.addVertex(B, N, uv ? uv[1] : undefined, colorv ? colorv[1] : undefined);
     this.addVertex(C, N, uv ? uv[2] : undefined, colorv ? colorv[2] : undefined);
 
-    this.indices.push([i, i + 1, i + 2]);
+    this.addTriangleIndices(i, i + 1, i + 2);
   }
+
+  addTriangleIndices(a:number, b:number, c:number){
+    this.indices.push([a,b,c]);
+  }
+
 
   addTriangleWithAttributesCCW(v0:Vertex3DAttributes, v1:Vertex3DAttributes, v2:Vertex3DAttributes, calcNormals=true){
     // this.hasAttribute("")

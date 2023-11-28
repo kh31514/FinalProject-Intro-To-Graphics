@@ -55,8 +55,16 @@ export class Color extends VectorBase {
         return new Color(0,0,0);
     }
 
+    static Red(){
+        return new Color(1.0, 0.0, 0.0);
+    }
+
     static Green(){
         return new Color(0.0, 1.0, 0.0);
+    }
+
+    static Blue(){
+        return new Color(0.0, 0.0, 1.0);
     }
 
     static FromRGBuintAfloat(

@@ -5,6 +5,38 @@
 // import styled, { css } from "styled-components";
 import styled from "styled-components";
 
+const WindowMaxWidthPercentage = 100;
+const WindowMaxHeightPercentage = 100;
+export const FullLayout = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
+  //height: 100vh;
+  height: 100%;
+  .anigraph-component-container{
+    display: flex;
+    height:100vh;
+    width: 100vw;
+  }
+  
+  #anigraph-app-div{
+    max-height: ${WindowMaxHeightPercentage}%;
+  }
+  
+  .anigraphcontainer {
+    max-width: ${WindowMaxWidthPercentage}%;
+    max-height: ${WindowMaxHeightPercentage}%;
+    //aspect-ratio: 1;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    border-radius: 10px;
+  }
+  .h1{
+    text-align: center;
+  }
+`;
+
+
 export const Layout = styled.div`
   #transformationviewer-main{
     width: 95%;

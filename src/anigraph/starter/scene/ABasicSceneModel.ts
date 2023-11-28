@@ -94,7 +94,6 @@ export abstract class ABasicSceneModel extends ASceneModel{
     async LoadBasicShaders(){
         let appState = GetAppState();
         await appState.loadShaderMaterialModel(AMaterialManager.DefaultMaterials.RGBA_SHADER);
-        // await appState.loadShaderMaterialModel(AMaterialManager.DefaultMaterials.TEXTURED2D_SHADER)
     }
 
     async PreloadAssets(){

@@ -1,7 +1,7 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
 import React, {useEffect, useState} from "react";
-import {MainComponent, GUIComponent, Layout} from "./Component";
+import {MainComponent, GUIComponent, Layout, FullLayout} from "./Component";
 import {AppState, CreateAppState, ControlPanel} from "../anigraph";
 
 
@@ -14,6 +14,11 @@ const appState = CreateAppState(SceneModel);
 SceneModel.initAppState(appState);
 appState.createMainRenderWindow(SceneControllerClass);
 const initConfirmation = appState.confirmInitialized();
+
+// const LayoutToUse = FullLayout;
+const LayoutToUse = Layout;
+
+
 
 function App() {
     useEffect(() => {
@@ -31,10 +36,10 @@ function App() {
             <div className={"control-panel-parent"}>
                 <ControlPanel appState={appState}></ControlPanel>
             </div>
-            <Layout>
+            <LayoutToUse>
                 <div className={"container-fluid"} id={"anigraph-app-div"}>
                     <div className={"row anigraph-row"}>
-                        <div className={`col-${appState.getState("CanvasColumnSize")??8} anigraph-component-container`}>
+                        <div className={`col-${appState.getState("CanvasColumnSize")??10} anigraph-component-container`}>
                             <MainComponent renderWindow={appState.mainRenderWindow} name={appState.sceneModel.name}>
                                 <GUIComponent appState={appState}>
                                 </GUIComponent>
@@ -42,7 +47,7 @@ function App() {
                         </div>
                     </div>
                 </div>
-            </Layout>
+            </LayoutToUse>
         </div>
     );
 }

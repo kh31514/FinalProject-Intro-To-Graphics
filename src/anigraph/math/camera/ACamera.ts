@@ -189,15 +189,16 @@ export abstract class ACameraClass<T extends TransformationInterface> extends AO
         this._setProjection(projection);
         let pinv = this.projection.getInverse();
         let min = pinv.times(V4(-1.0,-1.0,-1.0, 1.0)).getHomogenized()
-        let max = pinv.times(V4(1.0,1.0,1.0, 1.0)).getHomogenized()
+        let max = pinv.times(V4(1.0,1.0,-1.0, 1.0)).getHomogenized()
+        let farpoint = pinv.times(V4(0.0,0.0,1.0,1.0)).getHomogenized();
         this.lrbt = [
             min.x,
             max.x,
             min.y,
             max.y,
         ]
-        this.zNear = min.z;
-        this.zFar = max.z;
+        this.zNear = -min.z;
+        this.zFar = -farpoint.z;
     }
 
     // setPose(pose:T){

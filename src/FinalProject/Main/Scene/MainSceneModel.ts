@@ -3,16 +3,24 @@
  * @description Main model for your application
  */
 
-import {AppState, Color, GetAppState, Particle3D} from "../../../anigraph";
+import {AMaterialManager, AppState, Color, GetAppState, NodeTransform3D, Particle3D, V3} from "../../../anigraph";
 import {ABasicSceneModel} from "../../../anigraph/starter";
 import {AddExampleControlPanelSpecs} from "../../../ControlPanelExamples";
 import {BaseSceneModel} from "../../HelperClasses";
+import {CustomNode1Model} from "../Nodes/CustomNode1";
 
 /**
  * This is your Main Model class. The scene model is the main data model for your application. It is the root for a
  * hierarchy of models that make up your scene/
  */
 export class MainSceneModel extends BaseSceneModel{
+
+    async PreloadAssets(): Promise<void> {
+        super.PreloadAssets();
+        let appState = GetAppState();
+        await appState.loadShaderMaterialModel("rgba");
+
+    }
 
 
 
@@ -24,7 +32,7 @@ export class MainSceneModel extends BaseSceneModel{
         /**
          * The function below shows exampled of very general ways to use app state and the control panel.
          */
-        // AddExampleControlPanelSpecs(this);
+        AddExampleControlPanelSpecs(this);
 
     }
 
@@ -35,7 +43,7 @@ export class MainSceneModel extends BaseSceneModel{
         this.initPerspectiveCameraFOV(Math.PI/2, 1.0)
 
         // You can set its initial pose as well
-        // this.camera.setPose()
+        this.camera.setPose(NodeTransform3D.LookAt(V3(0,0,1), V3(), V3(0,1,0)))
     }
 
     /**
@@ -50,6 +58,11 @@ export class MainSceneModel extends BaseSceneModel{
      * by the scene controller. See example code below.
      */
     initScene(){
+        let appState = GetAppState();
+        let custommodel = CustomNode1Model.CreateTriangle();
+        let mat = appState.CreateShaderMaterial("rgba");
+        custommodel.setMaterial(mat);
+        this.addChild(custommodel);
     }
 
 

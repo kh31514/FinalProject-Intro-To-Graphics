@@ -3,13 +3,12 @@
  * @description This is where you connect models to views.
  * This is done mainly by defining your model view spec and interaction modes.
  */
-import {ABasicSceneController} from "../../../anigraph/starter";
 import {MainSceneModel} from "./MainSceneModel";
 import {ADragInteraction, AGLContext, AInteractionEvent, AKeyboardInteraction, Color} from "../../../anigraph";
-import {AddExampleControlPanelSpecs} from "../../../ControlPanelExamples";
 import {BaseSceneController} from "../../HelperClasses";
-
-
+import {CustomNode1Model, CustomNode1View} from "../Nodes/CustomNode1";
+import {ADebugInteractionMode} from "../../../anigraph/starter";
+import {CustomInteractionMode} from "../InteractionModes/CustomInteractionMode";
 
 /**
  * This is your Main Controller class. The scene controller is responsible for managing user input with the keyboard
@@ -30,7 +29,8 @@ export class MainSceneController extends BaseSceneController{
      * Check out Lab Cat's helpful C1Example2 scene for example code that sets the background to an image.
      * @returns {Promise<void>}
      */
-    async initScene() {
+    async initScene(): Promise<void> {
+        await super.initScene();
     }
 
     /**
@@ -40,6 +40,8 @@ export class MainSceneController extends BaseSceneController{
      * with custom nodes added.
      */
     initModelViewSpecs() {
+        super.initModelViewSpecs();
+        this.addModelViewSpec(CustomNode1Model, CustomNode1View);
     }
 
     onAnimationFrameCallback(context:AGLContext) {
@@ -67,9 +69,13 @@ export class MainSceneController extends BaseSceneController{
         context.renderer.render(this.getThreeJSScene(), this.getThreeJSCamera());
     }
 
-    beforeInitInteractions(...args: any[]): void {
+    initInteractions() {
+        super.initInteractions();
+
+        /**
+         * Add an instance of our custom interaction mode
+         */
+        this.defineInteractionMode(CustomInteractionMode.MODE_NAME, CustomInteractionMode.Create(this));
+        this.setCurrentInteractionMode(ADebugInteractionMode.NameInGUI);
     }
-
-
-
 }

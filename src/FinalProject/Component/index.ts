@@ -1,3 +1,3 @@
 export * from "./MainComponent"
 export * from "./GUIComponent"
-export {Layout} from "./style"
+export {Layout, FullLayout} from "./style"
