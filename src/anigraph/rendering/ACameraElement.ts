@@ -9,6 +9,10 @@ export class ACameraElement extends ACamera implements HasThreeJSObject{
         return this._threejs;
     }
 
+    getThreeJSCamera(){
+        return this.threejs;
+    }
+
     constructor(threeCamera?:THREE.Camera);
     constructor(pose?:TransformationInterface, projection?:Mat4);
     constructor(...args:any[]){

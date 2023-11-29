@@ -278,6 +278,19 @@ export class NodeTransform3D implements NodeTransform<Vec3, Mat4> {
       Quaternion.RotationZ(radians)
     );
   }
+  static RotationX(radians: number) {
+    return new NodeTransform3D(
+        new Vec3(0, 0, 0),
+        Quaternion.RotationX(radians)
+    );
+  }
+
+  static RotationY(radians: number) {
+    return new NodeTransform3D(
+        new Vec3(0, 0, 0),
+        Quaternion.RotationY(radians)
+    );
+  }
 
   static FromMatrix(mat: Mat4, position?: Vec3, rotation?: Quaternion) {
     let T = new NodeTransform3D();

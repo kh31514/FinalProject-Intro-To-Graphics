@@ -5,7 +5,7 @@ import type {WebGLRenderTargetOptions} from "three/src/renderers/WebGLRenderTarg
 import {RenderTargetInterface} from "../../scene";
 
 
-@ASerializable("ARenderPassData")
+@ASerializable("ARenderTarget")
 export class ARenderTarget extends AObject implements RenderTargetInterface{
     name!: string;
     _target: THREE.WebGLRenderTarget | null = null;
@@ -36,11 +36,20 @@ export class ARenderTarget extends AObject implements RenderTargetInterface{
         }
     }
 
+    static CreateFloatRGBATarget(width:number, height:number){
+        return new ARenderTarget(width, height, {
+            format: THREE.RGBAFormat,
+            type: THREE.FloatType,
+        })
+    }
+
     constructor(width:number, height:number, options?:WebGLRenderTargetOptions) {
         super();
         let defaultOptions = {
             format: THREE.RGBAFormat,
             type: THREE.FloatType,
+            magFilter: THREE.LinearFilter,
+            minFilter: THREE.LinearMipmapLinearFilter
         }
         let op = defaultOptions;
         if(options){
@@ -66,4 +75,9 @@ export class ARenderTarget extends AObject implements RenderTargetInterface{
         }
         super.release();
     }
+
+
+
+
+
 }

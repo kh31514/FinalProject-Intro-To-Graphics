@@ -9,7 +9,7 @@ import {Mutex} from "async-mutex";
 import {ClassInterface} from "../basictypes";
 import {AppStateValueChangeCallback} from "../basictypes";
 import {GUISpecs, GUIControlSpec} from "../GUISpecs";
-import {AniGraphDefines} from "../defines";
+import {AniGraphDefines, TextureProvidedKeyForName} from "../defines";
 
 var _appState:AAppState;
 
@@ -103,6 +103,15 @@ export abstract class AAppState extends AHandlesEvents{
 
     }
 
+    CreateControlPanelCheckboxSpec(stateName:string, value:boolean, otherSpecs?:{[name:string]:any}){
+        const self = this;
+        return GUISpecs.CheckboxControl(
+            self._GetOnChangeForName(stateName),
+            value,
+            otherSpecs
+        )
+    }
+
     CreateControlPanelSliderSpec(stateName:string, initialValue:any, min?:number, max?:number, step?:number, otherSpecs?:{[name:string]:any}):GUIControlSpec{
         const self = this;
         return GUISpecs.SliderControl(
@@ -153,6 +162,11 @@ export abstract class AAppState extends AHandlesEvents{
 
     addSliderControl(name:string, initialValue:any, min?:number, max?:number, step?:number){
         this.setGUIControlSpecKey(name, this.CreateControlPanelSliderSpec(name, initialValue, min, max, step))
+    }
+
+    addCheckboxControl(name:string, value:boolean){
+        this.setGUIControlSpecKey(name, this.CreateControlPanelCheckboxSpec(name, value))
+        // this.setUniform(TextureProvidedKeyForName(name), !!tex, 'bool');
     }
 
     addColorControl(name:string, initialValue:Color){

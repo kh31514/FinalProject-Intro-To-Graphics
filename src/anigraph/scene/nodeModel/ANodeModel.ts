@@ -125,6 +125,10 @@ export abstract class ANodeModel extends AModel implements HasTags{
         return this.addEventListener(AMaterial.Events.CHANGE, callback, handle);
     }
 
+    signalMaterialUpdate(){
+        this.signalEvent(AMaterial.Events.CHANGE);
+    }
+
     setMaterialUpdateSubscriptions(){
         const self = this;
         this.subscribe(this.material.addEventListener(AMaterial.Events.UPDATE, (...args:any[])=>{
@@ -152,7 +156,8 @@ export abstract class ANodeModel extends AModel implements HasTags{
             this._material = amaterial;
             this.setMaterialUpdateSubscriptions();
         }
-        this.signalEvent(AMaterial.Events.CHANGE)
+        this.signalMaterialUpdate();
+        // this.signalEvent(AMaterial.Events.CHANGE)
     }
 
     _disposeMaterial(){

@@ -31,8 +31,6 @@ export class Example0SceneModel extends ExampleSceneModel {
 
     initCamera(...args:any[]) {
         super.initCamera();
-        const appState = GetAppState();
-        this.initPerspectiveCameraFOV(0.5*Math.PI, 1.0)
 
         // the ground is the xy plane
         this.camera.setPose(

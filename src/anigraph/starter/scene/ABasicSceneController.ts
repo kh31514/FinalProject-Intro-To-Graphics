@@ -29,10 +29,10 @@ export abstract class ABasicSceneController extends ASceneController {
         return this._currentRenderTarget;
     }
     set currentRenderTarget(renderTarget:ARenderTarget|null){
-        this.setRenderTarget((renderTarget==undefined)?null:renderTarget);
+        this.setCurrentRenderTarget((renderTarget==undefined)?null:renderTarget);
     }
 
-    setRenderTarget(renderTarget?:ARenderTarget|null){
+    setCurrentRenderTarget(renderTarget?:ARenderTarget|null){
         if(renderTarget !== undefined && renderTarget !== null) {
             this.renderer.setRenderTarget(renderTarget.target)
             this._currentRenderTarget=renderTarget;
@@ -40,6 +40,9 @@ export abstract class ABasicSceneController extends ASceneController {
             this.renderer.setRenderTarget(null);
         }
     }
+
+
+
     //</editor-fold>
 
 

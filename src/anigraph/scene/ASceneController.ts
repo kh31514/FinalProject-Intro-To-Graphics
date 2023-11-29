@@ -159,7 +159,7 @@ export abstract class ASceneController extends AController implements HasModelVi
 
     }
 
-    async initRendering() {
+    async initRendering(...args:[]) {
         if(this.view){
             console.warn("Re-initializing scene controller that already has view. Killing view... Will try to release resources, but this has not been extensively unit tested!");
             this.view.disposeViews();

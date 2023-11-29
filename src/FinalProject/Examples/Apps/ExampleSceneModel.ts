@@ -93,33 +93,11 @@ export abstract class ExampleSceneModel extends BaseSceneModel {
         // this.materials.setMaterialModel("textured", await ABasicShaderModel.CreateModel("basic"));
     }
 
-    async LoadShaderModel(shaderName:string, useVertexColors:boolean=true){
-        let appState=GetAppState();
-        /**
-         * Now let's load a shader model, which we will use to create a custom shader material.
-         * The argument to `loadShaderMaterialModel` is the name used in the shader folder and glsl files.
-         * So if you your shader files have names likes:
-         * `public/shaders/__NAME__/__NAME__.__type__.glsl`
-         * then __NAME__ is what you want to pass in here.
-         *
-         * We're using an enum for the string because it's less prone to typos with multiple typings.
-         */
-        await appState.loadShaderMaterialModel(shaderName);
-
-        /**
-         * If we want to use vertex colors in our shader, we need to set useVertexColors to true.
-         * This will turn vertex colors on by default for materials created with this model.
-         * Each time you create a material, you can turn off vertex colors for that material if you want.
-         */
-        if(useVertexColors) {
-            appState.getShaderMaterialModel(shaderName).usesVertexColors = true;
-        }
-    }
-
     //###############################################//--Load The Dragon!--\\###############################################
     //<editor-fold desc="Load The Dragon!">
     async LoadTheDragon(){
-        await this.load3DModel("./models/ply/dragon.ply", "dragon");
+        let makeDragonPointDownYAxis = NodeTransform3D.RotationX(Math.PI*0.5);
+        await this.load3DModel("./models/ply/dragon.ply", "dragon", makeDragonPointDownYAxis);
     }
     //</editor-fold>
 
@@ -221,10 +199,9 @@ export abstract class ExampleSceneModel extends BaseSceneModel {
         const appState = GetAppState();
         this.initPerspectiveCameraFOV(0.5*Math.PI, 1.0)
 
-        // let cameraPose = NodeTransform3D.LookAt(V3(0,1,1), V3(), V3(0,1,0));
-
-        let cameraPose = NodeTransform3D.LookAt(V3(0,0,1), V3(), V3(0,1,0));
-        this.camera.setPose(cameraPose);
+        // We will set the camera based on a location, direction, and up vector
+        // let cameraPose = NodeTransform3D.LookAt(V3(0,0,1), V3(), V3(0,1,0));
+        // this.camera.setPose(cameraPose);
     }
 
     initTerrain(texture_name?:string){
@@ -296,8 +273,8 @@ export abstract class ExampleSceneModel extends BaseSceneModel {
         this.addChild(this.player);
     }
 
-    initDragonPlayer(){
-        let playerMaterial = CharacterModel.CreateMaterial();
+    initDragonPlayer(material?:AShaderMaterial){
+        let playerMaterial =material?? CharacterModel.CreateMaterial();
         playerMaterial.usesVertexColors=true;
         this.player = ExampleLoadedCharacterModel.Create(
             this.get3DModel("dragon"),

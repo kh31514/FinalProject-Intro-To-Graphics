@@ -13,6 +13,13 @@ export class ASceneElement extends AGraphicElement{
         return this._threejs;
     }
 
+    private get _scene(){
+        return this._threejs;
+    }
+    getThreeJSScene(){
+        return this._scene;
+    }
+
     constructor(threejsObject?:THREE.Scene) {
         super();
         if(threejsObject){

@@ -13,12 +13,14 @@ const enum Scenes{
     Main="Main", // This example is an empty scene. Room to fill with your hopes and dreams...
     Example0="Example0",
     Example1="Example1",
+    Example2="Example2",
     ShaderDemo="ShaderDemo",
 }
 
 let SceneSelection:Scenes = Scenes.Main; // This example is an empty scene. Room to fill with your hopes and dreams...
 // let SceneSelection:Scenes = Scenes.Example0;
 // let SceneSelection:Scenes = Scenes.Example1;
+// let SceneSelection:Scenes = Scenes.Example2;
 // let SceneSelection:Scenes = Scenes.ShaderDemo;
 
 
@@ -43,11 +45,17 @@ switch (SceneSelection) {
         SceneControllerClass = ExampleApps.Example1SceneController;
         break
     // @ts-ignore
-    // case Scenes.ShaderDemo:
-    //     SceneModel = new ExampleApps.ShaderDemoSceneModel();
-    //     SceneModel.name = "Example 1"
-    //     SceneControllerClass = ExampleApps.ShaderDemoSceneController;
+    // case Scenes.Example2:
+    //     SceneModel = new ExampleApps.Example2SceneModel();
+    //     SceneModel.name = "Example 2"
+    //     SceneControllerClass = ExampleApps.Example2SceneController;
     //     break
+    // @ts-ignore
+    case Scenes.ShaderDemo:
+        SceneModel = new ExampleApps.ShaderDemoSceneModel();
+        SceneModel.name = "Shader Demo"
+        SceneControllerClass = ExampleApps.ShaderDemoSceneController;
+        break
     default:
         console.warn(`Unrecognized Scene ${SceneSelection}!`)
         SceneModel = new MainSceneModel();

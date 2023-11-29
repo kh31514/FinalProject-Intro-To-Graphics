@@ -27,7 +27,7 @@ export class Example0SceneController extends ExampleSceneController{
          */
         await super.initScene();
         this.setClearColor(Color.Black());
-        // this.loadSpaceSkymap();
+        this.loadSpaceSkymap();
     }
 
     initInteractions() {

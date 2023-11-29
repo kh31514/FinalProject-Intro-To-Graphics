@@ -11,7 +11,7 @@ import {
     TerrainView, TriangleMeshCharacterModel, TriangleMeshCharacterView
 } from "../Nodes";
 import {ExamplePlayerInteractionMode, ExamplePointerLockInteractionMode} from "../InteractionModes";
-import {AGLContext, Quaternion} from "../../../anigraph";
+import {AGLContext, GetAppState, Quaternion} from "../../../anigraph";
 import {ExampleSceneModel} from "./ExampleSceneModel";
 
 export class ExampleSceneController extends BaseSceneController{
@@ -39,6 +39,39 @@ export class ExampleSceneController extends BaseSceneController{
         this.addModelViewSpec(ExampleParticleSystemModel, ExampleParticleSystemView);
         this.addModelViewSpec(BillboardParticleSystemModel, BillboardParticleSystemView);
         this.addModelViewSpec(ExampleLoadedCharacterModel, ExampleLoadedView)
+    }
+
+    /**
+     * Sometimes we may want to load a shader model in our scene controller, e.g., for multipass renderin effects
+     * @param shaderName
+     * @param useVertexColors
+     * @returns {Promise<void>}
+     * @constructor
+     */
+    async LoadShaderModel(shaderName:string, useVertexColors:boolean=true){
+        let appState=GetAppState();
+        /**
+         * Now let's load a shader model, which we will use to create a custom shader material.
+         * The argument to `loadShaderMaterialModel` is the name used in the shader folder and glsl files.
+         * So if you your shader files have names likes:
+         * `public/shaders/__NAME__/__NAME__.__type__.glsl`
+         * then __NAME__ is what you want to pass in here.
+         *
+         * We're using an enum for the string because it's less prone to typos with multiple typings.
+         */
+        await appState.loadShaderMaterialModel(shaderName);
+
+        // We could alternative load it ourselves and add the model by name:
+        // appState.addShaderMaterialModel(loadedmodel)
+
+        /**
+         * If we want to use vertex colors in our shader, we need to set useVertexColors to true.
+         * This will turn vertex colors on by default for materials created with this model.
+         * Each time you create a material, you can turn off vertex colors for that material if you want.
+         */
+        if(useVertexColors) {
+            appState.getShaderMaterialModel(shaderName).usesVertexColors = true;
+        }
     }
 
     /**

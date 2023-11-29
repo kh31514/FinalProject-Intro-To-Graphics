@@ -56,6 +56,16 @@ export class GUISpecs{
         }
     }
 
+    static CheckboxControl(onChange:(value:boolean)=>void, initialValue?:boolean, otherSpecs?:{[name:string]:any}){
+        return {
+            value:initialValue??false,
+            onChange: (v:any)=>{
+                return onChange(v);
+            },
+            ...otherSpecs
+        }
+    }
+
     static SliderControl(onChange:(v:number)=>void, initialValue:any, min:number, max:number, step?:number, otherSpecs?:{[name:string]:any}){{
             return {
                 value: initialValue,
