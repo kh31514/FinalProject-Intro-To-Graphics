@@ -7,6 +7,7 @@ import {MainSceneModel} from "./MainSceneModel";
 import {ADragInteraction, AGLContext, AInteractionEvent, AKeyboardInteraction, Color} from "../../../anigraph";
 import {BaseSceneController} from "../../HelperClasses";
 import {CustomNode1Model, CustomNode1View} from "../Nodes/CustomNode1";
+import {BillboardParticleSystemModel, BillboardParticleSystemView} from "../Nodes/BillboardParticleSystem";
 import {ADebugInteractionMode} from "../../../anigraph/starter";
 import {CustomInteractionMode} from "../InteractionModes/CustomInteractionMode";
 
@@ -40,6 +41,7 @@ export class MainSceneController extends BaseSceneController{
     initModelViewSpecs() {
         super.initModelViewSpecs();
         this.addModelViewSpec(CustomNode1Model, CustomNode1View);
+        this.addModelViewSpec(BillboardParticleSystemModel, BillboardParticleSystemView);
     }
 
     onAnimationFrameCallback(context:AGLContext) {

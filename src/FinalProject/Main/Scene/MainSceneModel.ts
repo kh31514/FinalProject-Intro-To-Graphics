@@ -6,21 +6,58 @@
 import {AMaterialManager, AppState, Color, GetAppState, NodeTransform3D, Particle3D, V3} from "../../../anigraph";
 import {ABasicSceneModel} from "../../../anigraph/starter";
 import {AddExampleControlPanelSpecs} from "../../../ControlPanelExamples";
-import {BaseSceneModel} from "../../HelperClasses";
+import {BaseSceneModel, CharacterModel} from "../../HelperClasses";
 import {CustomNode1Model} from "../Nodes/CustomNode1";
+import { BillboardParticleSystemModel } from "../Nodes/BillboardParticleSystem";
 import {UpdateGUIJSX, UpdateGUIJSXWithCameraPosition} from "../../Examples/GUIHelpers";
+import {ExampleParticleSystemModel, TerrainModel} from "../../Examples";
 
 /**
  * This is your Main Model class. The scene model is the main data model for your application. It is the root for a
  * hierarchy of models that make up your scene/
  */
 export class MainSceneModel extends BaseSceneModel{
+    billboardParticles!:BillboardParticleSystemModel;
+
+
+    async LoadExampleModelClassShaders() {
+
+        /**
+         * Some custom models can have their own shaders (see implementations for details)
+         * Which we can load to the model class.
+         */
+        await BillboardParticleSystemModel.LoadShaderModel();
+    }
+
+    async LoadExampleTextures(){
+        /**
+         * Let's load some example textures
+         */
+        await this.loadTexture("./images/gradientParticle.png", "particle")
+        // await ExampleParticleSystemModel.LoadShaderModel();
+        // this.materials.setMaterialModel("textured", await ABasicShaderModel.CreateModel("basic"));
+    }
 
     async PreloadAssets(): Promise<void> {
         super.PreloadAssets();
         let appState = GetAppState();
         await appState.loadShaderMaterialModel("rgba");
+        await this.LoadExampleTextures();
+        await this.LoadExampleModelClassShaders()
+    }
 
+    CreateBilboardParticleSystem(nParticles:number){
+        // BillboardParticleSystemModel.AddParticleSystemControls();
+        /**
+         * And now let's create our particle system
+         */
+
+        this.billboardParticles = BillboardParticleSystemModel.Create(nParticles, this.getTexture("particle"));
+        return this.billboardParticles
+    }
+
+    addExampleBilboardParticleSystem(nParticles:number=50){
+        this.addChild(this.CreateBilboardParticleSystem(nParticles))
     }
 
 
@@ -65,11 +102,12 @@ export class MainSceneModel extends BaseSceneModel{
      * by the scene controller. See example code below.
      */
     initScene(){
+        this.addExampleBilboardParticleSystem();
         let appState = GetAppState();
-        let custommodel = CustomNode1Model.CreateTriangle();
-        let mat = appState.CreateShaderMaterial("rgba");
-        custommodel.setMaterial(mat);
-        this.addChild(custommodel);
+        //let custommodel = CustomNode1Model.CreateTriangle();
+        // let mat = appState.CreateShaderMaterial("rgba");
+        // custommodel.setMaterial(mat);
+        // this.addChild(custommodel);
     }
 
 
@@ -87,6 +125,8 @@ export class MainSceneModel extends BaseSceneModel{
         if(args != undefined && args.length>0){
             t = args[0];
         }
+
+        this.billboardParticles.timeUpdate(t, this.camera);
 
         /**
          * If you want to update the react GUI components
