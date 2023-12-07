@@ -1,6 +1,7 @@
 import { ExampleSceneController } from "src/FinalProject/Examples/Apps/ExampleSceneController";
 import { Color, Mat3, V3 } from "src/anigraph";
 import { MainSceneModel } from "./MainSceneModel";
+import { ExampleClickInteractionMode } from "src/FinalProject/Examples";
 
 export class MainSceneController extends ExampleSceneController {
     get model(): MainSceneModel {
@@ -24,7 +25,7 @@ export class MainSceneController extends ExampleSceneController {
     initInteractions() {
         super.initInteractions();
         this.initExampleInteractions();
-
+        this.defineInteractionMode("ExampleClick", ExampleClickInteractionMode.Create(this));
     }
 
 }

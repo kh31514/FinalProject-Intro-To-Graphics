@@ -1,8 +1,8 @@
 import {
     ACameraModel, AInteractionEvent,
-    AppState,
+    AppState, GetAppState, Quaternion, ATriangleMeshModel,
     NodeTransform3D, Particle3D,
-    V3, Vec2,
+    V3, Vec2, VertexArray3D
 } from "src/anigraph";
 import {
     BillboardParticleSystemModel,
@@ -25,6 +25,11 @@ export class MainSceneModel extends ExampleSceneModel {
         await super.PreloadAssets();
         await this.LoadExampleTextures();
         await this.LoadExampleModelClassShaders()
+
+        await this.LoadCursorTexture();
+        let appState = GetAppState();
+        await appState.loadShaderMaterialModel("simpletexture");
+        await appState.addShaderMaterialModel("blinnphong", ABlinnPhongShaderModel);
     }
 
 
@@ -58,8 +63,46 @@ export class MainSceneModel extends ExampleSceneModel {
          * It's just uniform random bumps right now, nothing fancy.
          */
         this.terrain.reRollRandomHeightMap();
+
+        /**
+ * Let's add the cursor model but keep it invisible until an appropriate mode is activated
+ * @type {boolean}
+ */
+        this.initCursorModel();
+        this.cursorModel.visible = false;
     }
 
+
+
+    CreateNewClickModel(radius: number = 0.01) {
+        let appState = GetAppState();
+        let newClickModel = new ATriangleMeshModel();
+        let verts = VertexArray3D.Sphere(radius);
+        newClickModel.setVerts(verts);
+        let newModelMaterial = appState.CreateShaderMaterial("blinnphong");
+        newModelMaterial.setTexture("diffuse", this.getTexture("cursor"));
+        newClickModel.setMaterial(newModelMaterial);
+        return newClickModel
+    }
+
+
+    onClick(event: AInteractionEvent) {
+        console.log(event);
+        let appState = GetAppState();
+        let newModel = this.CreateNewClickModel(0.1);
+        newModel.setTransform(
+            new NodeTransform3D(
+                V3(
+                    Math.random() - 0.5,
+                    Math.random() - 0.5,
+                    0
+                ).times(appState.globalScale),
+                Quaternion.RotationY(-Math.PI * 0.5).times(Quaternion.RotationX(-Math.PI * 0.25))
+            )
+
+        )
+        this.addChild(newModel);
+    }
 
     getCoordinatesForCursorEvent(event: AInteractionEvent) {
         return event.ndcCursor ?? new Vec2();
