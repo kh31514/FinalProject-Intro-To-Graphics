@@ -1,29 +1,29 @@
-import {ClassInterface} from "../anigraph";
-import {MainSceneModel} from "./Main/Scene/MainSceneModel";
-import {MainSceneController} from "./Main/Scene/MainSceneController";
+import { ClassInterface } from "../anigraph";
+import { MainSceneModel } from "./Main/Scene/MainSceneModel";
+import { MainSceneController } from "./Main/Scene/MainSceneController";
 
-import {ABasicSceneController, ABasicSceneModel} from "../anigraph/starter";
-import {ExampleApps} from "./Examples"
+import { ABasicSceneController, ABasicSceneModel } from "../anigraph/starter";
+import { ExampleApps } from "./Examples"
 
-export let SceneModel:ABasicSceneModel;
-export let SceneControllerClass:ClassInterface<ABasicSceneController>;
+export let SceneModel: ABasicSceneModel;
+export let SceneControllerClass: ClassInterface<ABasicSceneController>;
 
 
-const enum Scenes{
-    Main="Main", // This example is an empty scene. Room to fill with your hopes and dreams...
-    Example0="Example0",
-    Example1="Example1",
-    Example2="Example2",
-    Example3="Example3",
-    ShaderDemo="ShaderDemo",
+const enum Scenes {
+    Main = "Main", // This example is an empty scene. Room to fill with your hopes and dreams...
+    Example0 = "Example0",
+    Example1 = "Example1",
+    Example2 = "Example2",
+    Example3 = "Example3",
+    ShaderDemo = "ShaderDemo",
 }
 
-let SceneSelection:Scenes = Scenes.Main; // This example is an empty scene. Room to fill with your hopes and dreams...
+//let SceneSelection:Scenes = Scenes.Main; // This example is an empty scene. Room to fill with your hopes and dreams...
 // let SceneSelection:Scenes = Scenes.Example0;
-// let SceneSelection:Scenes = Scenes.Example1;
-// let SceneSelection:Scenes = Scenes.Example2;
-// let SceneSelection:Scenes = Scenes.Example3;
-// let SceneSelection:Scenes = Scenes.ShaderDemo;
+let SceneSelection: Scenes = Scenes.Example1;
+//let SceneSelection: Scenes = Scenes.Example2;
+//let SceneSelection: Scenes = Scenes.Example3;
+//let SceneSelection: Scenes = Scenes.ShaderDemo;
 
 
 
