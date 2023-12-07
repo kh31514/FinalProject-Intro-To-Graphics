@@ -30,6 +30,8 @@ export class MainSceneModel extends ExampleSceneModel {
         let appState = GetAppState();
         await appState.loadShaderMaterialModel("simpletexture");
         await appState.addShaderMaterialModel("blinnphong", ABlinnPhongShaderModel);
+
+        await this.loadTexture("./images/terrain/rock.jpg", "rock")
     }
 
 
@@ -56,7 +58,7 @@ export class MainSceneModel extends ExampleSceneModel {
         /**
          * initialize terrain
          */
-        this.initTerrain();
+        this.initTerrain("rock");
 
         /**
          * Let's generate a random slightly bumpy terrain.
