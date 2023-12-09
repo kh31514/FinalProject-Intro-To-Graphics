@@ -90,8 +90,28 @@ export class MainSceneModel extends ExampleSceneModel {
 
     onClick(event: AInteractionEvent) {
         console.log(event);
+        console.log(event.cursorPosition)
+        // TODO: transform pixel coordinates to terrain coordinates
+        let pos = event.cursorPosition
+        if (pos != null) {
+            // need to figure out how to transform 2d point with 4D matrix??
+            // transform pixels to world coordinates
+            // then world coordinates -> terrain coordinates
+
+            /**
+             * Get the world coordinates of the cursor
+             */
+            let cursorWorldCoordinates = this.getCoordinatesForCursorEvent(event);
+            console.log(cursorWorldCoordinates)
+            // TODO figure out how to convert these to 3D world coordinates
+
+            let trans = this.terrain.transform.getMat4()
+
+            this.terrain.playerInteraction(this.terrain.heightMap.width / 2, this.terrain.heightMap.height / 2, .05)
+        }
+
         let appState = GetAppState();
-        let newModel = this.CreateNewClickModel(0.1);
+        /* let newModel = this.CreateNewClickModel(0.1);
         newModel.setTransform(
             new NodeTransform3D(
                 V3(
@@ -103,7 +123,7 @@ export class MainSceneModel extends ExampleSceneModel {
             )
 
         )
-        this.addChild(newModel);
+        this.addChild(newModel); */
     }
 
     getCoordinatesForCursorEvent(event: AInteractionEvent) {

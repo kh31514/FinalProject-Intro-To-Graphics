@@ -7,11 +7,11 @@ import {
 import {
     BillboardParticleSystemModel,
 } from "../../Nodes";
-import {ExampleSceneModel} from "../ExampleSceneModel";
-import {ABlinnPhongShaderModel} from "../../../../anigraph/rendering/shadermodels";
+import { ExampleSceneModel } from "../ExampleSceneModel";
+import { ABlinnPhongShaderModel } from "../../../../anigraph/rendering/shadermodels";
 
 export class Example1SceneModel extends ExampleSceneModel {
-    billboardParticles!:BillboardParticleSystemModel;
+    billboardParticles!: BillboardParticleSystemModel;
 
     /**
      * Optionally add some app state here. Good place to set up custom control panel controls.
@@ -46,8 +46,8 @@ export class Example1SceneModel extends ExampleSceneModel {
         this.cameraModel.setPose(
             NodeTransform3D.LookAt(
                 V3(0, -1, 1),
-                V3(0,0,0),
-                V3(0,0,1)
+                V3(0, 0, 0),
+                V3(0, 0, 1)
             )
         )
     }
@@ -88,8 +88,8 @@ export class Example1SceneModel extends ExampleSceneModel {
     }
 
 
-    getCoordinatesForCursorEvent(event: AInteractionEvent){
-        return event.ndcCursor??new Vec2();
+    getCoordinatesForCursorEvent(event: AInteractionEvent) {
+        return event.ndcCursor ?? new Vec2();
     }
 
     /**
@@ -97,18 +97,22 @@ export class Example1SceneModel extends ExampleSceneModel {
      * this can be used on characters as well) intersects the terrain.
      * @param particle
      */
-    adjustParticleHeight(particle:Particle3D){
+    adjustParticleHeight(particle: Particle3D) {
         let height = this.terrain.getTerrainHeightAtPoint(particle.position.xy);
-        if(particle.position.z<height){particle.position.z = height;}
+        if (particle.position.z < height) { particle.position.z = height; }
     }
 
+    /*  onClick(event: AInteractionEvent) {
+         console.log(event);
+     } */
 
 
-    timeUpdate(t: number, ...args:any[]) {
+
+    timeUpdate(t: number, ...args: any[]) {
 
         this.timeUpdateDescendants(t);
         this.adjustParticleHeight(this.player);
-        for(let ei=0;ei<this.bots.length;ei++){
+        for (let ei = 0; ei < this.bots.length; ei++) {
             let e = this.bots[ei];
             /**
              * adjust their height

@@ -182,14 +182,18 @@ export class TerrainModel extends ATerrainModel {
         this.heightMap.setTextureNeedsUpdate();
     }
 
-    // TODO: method to let the player change the terrain
+    // TODO: fix this method
     playerInteraction(x: number, y: number, change: number) {
+
+        //this.reRollRandomHeightMap(1)
         for (let i = y - 5; i < y + 5; i++) {
-            for (let j = x - 5; j < x - 5; j++) {
+            for (let j = x - 5; j < x + 5; j++) {
                 // TODO make the edges less rigid
                 this.heightMap.setPixelNN(i, j, this.heightMap.pixelData.getPixelNN(x, y) + change);
+                //this.heightMap.setPixelNN(j, i, 10);
             }
         }
+        this.heightMap.setTextureNeedsUpdate();
     }
 
 
