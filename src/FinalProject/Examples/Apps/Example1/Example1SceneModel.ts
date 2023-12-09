@@ -1,6 +1,6 @@
 import {
-    ACameraModel, AInteractionEvent,
-    AppState,
+    ACameraModel, AInteractionEvent, AMaterial,
+    AppState, GetAppState,
     NodeTransform3D, Particle3D,
     V3, Vec2,
 } from "../../../../anigraph";
@@ -78,6 +78,16 @@ export class Example1SceneModel extends ExampleSceneModel {
         // this.addExampleThreeJSNodeModel();
 
         this.addExampleBilboardParticleSystem();
+
+        GetAppState().addCheckboxControl("CullFront", false);
+        const self = this;
+        this.subscribeToAppState("CullFront", (v:boolean)=>{
+            if(v) {
+                self.player.material.setRenderSide(AMaterial.GEOMETRY_SIDE.BACK)
+            }else{
+                self.player.material.setRenderSide(AMaterial.GEOMETRY_SIDE.FRONT)
+            }
+        })
 
 
 

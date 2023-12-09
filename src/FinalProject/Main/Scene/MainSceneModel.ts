@@ -1,8 +1,18 @@
-/**
- * @file Main scene model
- * @description Main model for your application
- */
+import {
+    ACameraModel, AInteractionEvent,
+    AppState, GetAppState, Quaternion, ATriangleMeshModel,
+    NodeTransform3D, Particle3D,
+    V3, Vec2, VertexArray3D
+} from "src/anigraph";
+import {
+    BillboardParticleSystemModel,
+} from "src/FinalProject/Examples/Nodes";
+import { ExampleSceneModel } from "src/FinalProject/Examples/Apps/ExampleSceneModel";
+import { ABlinnPhongShaderModel } from "src/anigraph/rendering/shadermodels";
+export class MainSceneModel extends ExampleSceneModel {
+    billboardParticles!: BillboardParticleSystemModel;
 
+<<<<<<< HEAD
 import {AMaterialManager, AppState, Color, GetAppState, NodeTransform3D, Particle3D, V3} from "../../../anigraph";
 import {ABasicSceneModel} from "../../../anigraph/starter";
 import {AddExampleControlPanelSpecs} from "../../../ControlPanelExamples";
@@ -37,10 +47,25 @@ export class MainSceneModel extends BaseSceneModel{
         // await ExampleParticleSystemModel.LoadShaderModel();
         // this.materials.setMaterialModel("textured", await ABasicShaderModel.CreateModel("basic"));
     }
+=======
+    /**
+     * Optionally add some app state here. Good place to set up custom control panel controls.
+     * @param appState
+     */
+    initAppState(appState: AppState): void {
 
-    async PreloadAssets(): Promise<void> {
-        super.PreloadAssets();
+    }
+
+>>>>>>> origin
+
+    async PreloadAssets() {
+        await super.PreloadAssets();
+        await this.LoadExampleTextures();
+        await this.LoadExampleModelClassShaders()
+
+        await this.LoadCursorTexture();
         let appState = GetAppState();
+<<<<<<< HEAD
         await appState.loadShaderMaterialModel("rgba");
         await this.LoadExampleTextures();
         await this.LoadExampleModelClassShaders()
@@ -58,38 +83,68 @@ export class MainSceneModel extends BaseSceneModel{
 
     addExampleBilboardParticleSystem(nParticles:number=50){
         this.addChild(this.CreateBilboardParticleSystem(nParticles))
+=======
+        await appState.loadShaderMaterialModel("simpletexture");
+        await appState.addShaderMaterialModel("blinnphong", ABlinnPhongShaderModel);
+
+        await this.loadTexture("./images/terrain/rock.jpg", "rock")
+>>>>>>> origin
     }
 
 
+    initCamera() {
+        super.initCamera();
+        this.cameraModel = ACameraModel.CreatePerspectiveFOV(90, 1, 0.01, 10);
+        this.cameraModel.setPose(
+            NodeTransform3D.LookAt(
+                V3(0, -1, 1),
+                V3(0, 0, 0),
+                V3(0, 0, 1)
+            )
+        )
+    }
 
-    /**
-     * This will add variables to the control pannel
-     * @param appState
-     */
-    initAppState(appState:AppState){
+
+    initScene() {
         /**
-         * The function below shows exampled of very general ways to use app state and the control panel.
+         * We need to add a light before we can see anything.
+         * The easiest thing is to just attach a point light to the camera.
          */
-        // AddExampleControlPanelSpecs(this);
+        this.addViewLight();
 
         /**
-         * Optionally, you can add functions that will tell what should be displayed in the React portion of the GUI. Note that the functions must return JSX code, which means they need to be written in a .tsx file. That's why we've put them in a separate file.
+         * initialize terrain
          */
-        // appState.setReactGUIContentFunction(UpdateGUIJSX);
-        // appState.setReactGUIBottomContentFunction(UpdateGUIJSXWithCameraPosition);
+        this.initTerrain("rock");
 
+        /**
+         * Let's generate a random slightly bumpy terrain.
+         * It's just uniform random bumps right now, nothing fancy.
+         */
+        this.terrain.reRollRandomHeightMap();
+
+        /**
+ * Let's add the cursor model but keep it invisible until an appropriate mode is activated
+ * @type {boolean}
+ */
+        this.initCursorModel();
+        this.cursorModel.visible = false;
     }
 
-    initCamera(...args: any[]) {
-        const appState = GetAppState();
 
-        // You can change your camera parameters here
-        this.initPerspectiveCameraFOV(Math.PI/2, 1.0)
 
-        // You can set its initial pose as well
-        this.camera.setPose(NodeTransform3D.LookAt(V3(0,0,1), V3(), V3(0,1,0)))
+    CreateNewClickModel(radius: number = 0.01) {
+        let appState = GetAppState();
+        let newClickModel = new ATriangleMeshModel();
+        let verts = VertexArray3D.Sphere(radius);
+        newClickModel.setVerts(verts);
+        let newModelMaterial = appState.CreateShaderMaterial("blinnphong");
+        newModelMaterial.setTexture("diffuse", this.getTexture("cursor"));
+        newClickModel.setMaterial(newModelMaterial);
+        return newClickModel
     }
 
+<<<<<<< HEAD
     /**
      * Use this function to initialize the content of the scene.
      * Generally, this will involve creating instances of ANodeModel subclasses and adding them as children of the scene:
@@ -108,6 +163,29 @@ export class MainSceneModel extends BaseSceneModel{
         // let mat = appState.CreateShaderMaterial("rgba");
         // custommodel.setMaterial(mat);
         // this.addChild(custommodel);
+=======
+
+    onClick(event: AInteractionEvent) {
+        console.log(event);
+        let appState = GetAppState();
+        let newModel = this.CreateNewClickModel(0.1);
+        newModel.setTransform(
+            new NodeTransform3D(
+                V3(
+                    Math.random() - 0.5,
+                    Math.random() - 0.5,
+                    0
+                ).times(appState.globalScale),
+                Quaternion.RotationY(-Math.PI * 0.5).times(Quaternion.RotationX(-Math.PI * 0.25))
+            )
+
+        )
+        this.addChild(newModel);
+    }
+
+    getCoordinatesForCursorEvent(event: AInteractionEvent) {
+        return event.ndcCursor ?? new Vec2();
+>>>>>>> origin
     }
 
 
@@ -118,11 +196,10 @@ export class MainSceneModel extends BaseSceneModel{
      * You can decide whether to couple the controller's clock and the model's. It's usually good practice to have the model run on a separate clock.
      * @param t
      */
-    timeUpdate(t?: number):void;
-    timeUpdate(...args:any[])
-    {
+    timeUpdate(t?: number): void;
+    timeUpdate(...args: any[]) {
         let t = this.clock.time;
-        if(args != undefined && args.length>0){
+        if (args != undefined && args.length > 0) {
             t = args[0];
         }
 
@@ -134,4 +211,6 @@ export class MainSceneModel extends BaseSceneModel{
         // GetAppState().updateComponents();
 
     }
-};
+
+
+}
