@@ -8,7 +8,7 @@ import {
     GetAppState,
     V3,
     Vec3,
-    Mat4, ACamera
+    Mat3, Mat4, ACamera
 } from "../../../../anigraph";
 import {BillboardParticle} from "./BillboardParticle";
 import {AInstancedParticleSystemModel} from "../../../../anigraph/effects";
@@ -118,7 +118,9 @@ export class BillboardParticleSystemModel extends AInstancedParticleSystemModel<
          */
         let particleSize = 0.05;
         let startPosition = this.getWorldTransform().c3.Point3D;
+        // console.log(startPosition);
         let startSpeed = appState.getState(BillboardParticleSystemModel.ForceStrengthSliderName)??0.5;
+        // let startVelocity = new Vec3(0,1,0)
         let startVelocity = V3(Math.cos(t*5), Math.sin(t*5), 1.0).times(startSpeed);
         let newParticleMass = appState.getState(BillboardParticleSystemModel.ParticleMassSliderName)??1;
         this.emit(startPosition,
@@ -133,20 +135,38 @@ export class BillboardParticleSystemModel extends AInstancedParticleSystemModel<
          */
         for(let i=0;i<this.particles.length;i++){
             let p =this.particles[i];
+
+
+            let theta = 0.1;
+
+            // x
+            // let rotMax = new Mat3(1,0,0, 0,Math.cos(theta),-Math.sin(theta),0,Math.cos(theta),-Math.sin(theta));
+            // y
+            // let rotMax = new Mat3(Math.cos(theta),0,Math.sin(theta),0,1,0,-Math.sin(theta),0,Math.cos(theta));
+            // z
+            // let rotMax = new Mat3(Math.cos(theta),-Math.sin(theta),0, Math.sin(theta),Math.cos(theta),0, 0,0,1);
+
+
+
+            // p.position=rotMax.times(p.position)
+
+
             p.position=p.position.plus(
                 p.velocity.times(
                     (appState.getState(BillboardParticleSystemModel.VelocitySliderName)??0.5)*timePassed
                 )
             );
+
+            // p.position=p.position.times(
             // face camera
             // model = mat4(1.0,   0.0,   0.0, 0.0,
             //     0.0,   1.0,   0.0, 0.0,
             //     0.0,   0.0,   1.0, 0.0,
             //     aOffset.x, aOffset.y, aOffset.z, 1.0);
 
-            let look = normalize(camera.position - p.position);
-            let right = math.cross(camera.up, look);
-            let up2 = math.cross(look, right);
+            // let look = normalize(camera.position - p.position);
+            // let right = math.cross(camera.up, look);
+            // let up2 = math.cross(look, right);
             // let transform = ;
             // transform[0] = vec4(right, 0);
             // transform[1] = vec4(up2, 0);

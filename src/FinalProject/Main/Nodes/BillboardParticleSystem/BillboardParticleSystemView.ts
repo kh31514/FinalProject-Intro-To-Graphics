@@ -1,5 +1,5 @@
 import {BillboardParticleSystemModel} from "./BillboardParticleSystemModel";
-import {Color, Mat3, Mat4, NodeTransform3D, Quaternion, Vec3} from "../../../../anigraph";
+import {Color, GetAppState, Mat3, Mat4, NodeTransform3D, Quaternion, Vec3} from "../../../../anigraph";
 import {
     AInstancedParticleSystemGraphic, AInstancedParticleSystemView,
 } from "../../../../anigraph/effects";
@@ -58,7 +58,16 @@ export class BillboardParticleSystemView extends AInstancedParticleSystemView<Bi
     _getTransformForParticleIndex(i: number): Mat4 {
         // throw new Error("Method not implemented.");
         let particle = this.model.particles[i];
-        let nt=new NodeTransform3D(particle.position,new Quaternion(), particle.size);
+
+
+        // let rot = new Quaternion();
+        let appState = GetAppState();
+        let look = appState.sceneModel.camera.transform.position;
+        let up = appState.sceneModel.camera.transform.anchor;
+
+        let rot = Quaternion.FromCameraOrientationVectors(look,up);
+
+        let nt=new NodeTransform3D(particle.position, rot, particle.size);
         return nt.getMat4();
     }
 
