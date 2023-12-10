@@ -64,6 +64,7 @@ export class MainSceneModel extends ExampleSceneModel {
          * Let's generate a random slightly bumpy terrain.
          * It's just uniform random bumps right now, nothing fancy.
          */
+        // this.terrain.perlinTerrain();
         this.terrain.reRollRandomHeightMap();
 
         /**
