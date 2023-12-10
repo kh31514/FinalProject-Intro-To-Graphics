@@ -2,7 +2,7 @@ import {
     ACameraModel, AInteractionEvent,
     AppState, GetAppState, Quaternion, ATriangleMeshModel,
     NodeTransform3D, Particle3D,
-    V3, Vec2, VertexArray3D
+    V3, V4, Vec2, VertexArray3D
 } from "src/anigraph";
 import {
     BillboardParticleSystemModel,
@@ -92,6 +92,47 @@ export class MainSceneModel extends ExampleSceneModel {
         console.log(event);
         console.log(event.cursorPosition)
         // TODO: transform pixel coordinates to terrain coordinates
+
+        let ndcCursor = event.ndcCursor;
+        if (ndcCursor) {
+
+            /**
+             * The cursor in NDC coordinates (randing from -1 to 1 across the x and y dimensions of your rendering window), as a homogeneous 3D vector at depth 0 in NDC space
+             * @type {Vec4}
+             */
+            let cursorCoordsH = V4(
+                ndcCursor.x,
+                ndcCursor.y,
+                0,
+                1
+            );
+
+            /**
+             * The cursor in eye coordinates. We will calculate this by transforming by the inverse of our projection matrix.
+             * @type {Vec4}
+             */
+            let eyeCoordinates = this.camera.projection.getInverse().times(cursorCoordsH).getHomogenized();
+
+            // convert the point in eye coordinates to world coordinates
+            let cursorWorld = this.camera.transform.times(eyeCoordinates)
+            // TODO divide by homogenous coordinates?
+
+            // get the current location of the camera in world coordinates
+            let cameraWorld = V4(this.camera.position.x, this.camera.position.y, this.camera.position.z, 1)
+
+            let ray = cursorWorld.minus(cameraWorld)
+
+            // find place where ray height is 0, see where it intersects?
+            let terrain_height = 0
+            let t = (terrain_height - cameraWorld.z) / ray.z
+
+            if (t > 0) {
+                // find intersection with x and y
+                console.log(cameraWorld.x + t * ray.x)
+                console.log(cameraWorld.y + t * ray.y)
+            }
+        }
+
         let pos = event.cursorPosition
         if (pos != null) {
             // need to figure out how to transform 2d point with 4D matrix??

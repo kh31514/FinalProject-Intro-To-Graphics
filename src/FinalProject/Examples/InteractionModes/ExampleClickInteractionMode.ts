@@ -57,6 +57,17 @@ export class ExampleClickInteractionMode extends ASceneInteractionMode{
              */
             let eyeCoordinates = this.camera.projection.getInverse().times(cursorCoordsH).getHomogenized();
 
+            // convert the point in eye coordinates to world coordinates
+            let worldCoordinates = this.camera.transform.times(eyeCoordinates)
+            // TODO divide by homogenous coordinates?
+
+            // get the current location of the camera in world coordinates
+            let cameraWorld = new Vec3([this.camera.position.x, this.camera.position.y, this.camera.position.z, 1])
+            
+            let ray = worldCoordinates - cameraWorld
+
+            // TODO do intersectio w terrain
+
             /**
              * Set the position of our cursor to this eye coordinates position
              */

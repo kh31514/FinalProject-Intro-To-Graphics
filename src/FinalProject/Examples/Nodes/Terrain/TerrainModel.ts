@@ -151,6 +151,7 @@ export class TerrainModel extends ATerrainModel {
      */
     reRollRandomHeightMap(seed?: number, gridResX: number = 5, gridResY: number = 5) {
         let waterfall_height = 1
+        let waterfall_width = 10
 
         for (let y = 0; y < this.heightMap.height; y++) {
             for (let x = 0; x < this.heightMap.width; x++) {
@@ -159,11 +160,14 @@ export class TerrainModel extends ATerrainModel {
                     // raised terrain for the waterfall
                     this.heightMap.setPixelNN(x, y, Math.random() * 0.05 + waterfall_height);
                 }
-                else if (y > this.heightMap.height * 3 / 4 - 10) {
+                else if (y > this.heightMap.height * 3 / 4 - waterfall_width) {
                     // sloping part of waterfall
                     // calculate the height, then change slightly based on randomness
-                    let slope = waterfall_height / 10
-                    let height = slope * (y - (this.heightMap.width * 3 / 4 - 10))
+                    let slope = waterfall_height / waterfall_width
+                    let t = y - (this.heightMap.width * 3 / 4 - waterfall_width)
+                    let sigmoid_output = waterfall_height / (1 + Math.exp(-2 * (t - waterfall_width / 2) / waterfall_width))
+                    //let height = slope * (y - (this.heightMap.width * 3 / 4 - 10))
+                    let height = sigmoid_output
 
                     this.heightMap.setPixelNN(x, y, Math.random() * 0.05 + height);
                 }
