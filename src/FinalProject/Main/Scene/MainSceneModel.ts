@@ -4,50 +4,19 @@ import {
     NodeTransform3D, Particle3D,
     V3, Vec2, VertexArray3D
 } from "src/anigraph";
-import {
-    BillboardParticleSystemModel,
-} from "src/FinalProject/Examples/Nodes";
+import { BillboardParticleSystemModel } from "../Nodes/BillboardParticleSystem";
+import { ParticleSystemModel } from "../Nodes/ParticleSystem";
 import { ExampleSceneModel } from "src/FinalProject/Examples/Apps/ExampleSceneModel";
 import { ABlinnPhongShaderModel } from "src/anigraph/rendering/shadermodels";
-export class MainSceneModel extends ExampleSceneModel {
-    billboardParticles!: BillboardParticleSystemModel;
-
-<<<<<<< HEAD
-import {AMaterialManager, AppState, Color, GetAppState, NodeTransform3D, Particle3D, V3} from "../../../anigraph";
-import {ABasicSceneModel} from "../../../anigraph/starter";
-import {AddExampleControlPanelSpecs} from "../../../ControlPanelExamples";
-import {BaseSceneModel, CharacterModel} from "../../HelperClasses";
-import {CustomNode1Model} from "../Nodes/CustomNode1";
-import { BillboardParticleSystemModel } from "../Nodes/BillboardParticleSystem";
-import {UpdateGUIJSX, UpdateGUIJSXWithCameraPosition} from "../../Examples/GUIHelpers";
 import {ExampleParticleSystemModel, TerrainModel} from "../../Examples";
+import {CharacterModel} from "../../HelperClasses";
 
-/**
- * This is your Main Model class. The scene model is the main data model for your application. It is the root for a
- * hierarchy of models that make up your scene/
- */
-export class MainSceneModel extends BaseSceneModel{
-    billboardParticles!:BillboardParticleSystemModel;
+export class MainSceneModel extends ExampleSceneModel {
+    billboardWaterfallParticles!: BillboardParticleSystemModel;
+    billboardMistParticles!: BillboardParticleSystemModel;
+    billboardMistParticles2!: BillboardParticleSystemModel;
+    waterSurfaceParticles!: ParticleSystemModel;
 
-
-    async LoadExampleModelClassShaders() {
-
-        /**
-         * Some custom models can have their own shaders (see implementations for details)
-         * Which we can load to the model class.
-         */
-        await BillboardParticleSystemModel.LoadShaderModel();
-    }
-
-    async LoadExampleTextures(){
-        /**
-         * Let's load some example textures
-         */
-        await this.loadTexture("./images/gradientParticle.png", "particle")
-        // await ExampleParticleSystemModel.LoadShaderModel();
-        // this.materials.setMaterialModel("textured", await ABasicShaderModel.CreateModel("basic"));
-    }
-=======
     /**
      * Optionally add some app state here. Good place to set up custom control panel controls.
      * @param appState
@@ -56,7 +25,18 @@ export class MainSceneModel extends BaseSceneModel{
 
     }
 
->>>>>>> origin
+    async LoadExampleModelClassShaders() {
+
+        /**
+         * Some custom models can have their own shaders (see implementations for details)
+         * Which we can load to the model class.
+         */
+        await TerrainModel.LoadShaderModel();
+        await CharacterModel.LoadShaderModel();
+        await ExampleParticleSystemModel.LoadShaderModel();
+        await BillboardParticleSystemModel.LoadShaderModel();
+        await ParticleSystemModel.LoadShaderModel();
+    }
 
     async PreloadAssets() {
         await super.PreloadAssets();
@@ -65,30 +45,49 @@ export class MainSceneModel extends BaseSceneModel{
 
         await this.LoadCursorTexture();
         let appState = GetAppState();
-<<<<<<< HEAD
-        await appState.loadShaderMaterialModel("rgba");
-        await this.LoadExampleTextures();
-        await this.LoadExampleModelClassShaders()
-    }
-
-    CreateBilboardParticleSystem(nParticles:number){
-        // BillboardParticleSystemModel.AddParticleSystemControls();
-        /**
-         * And now let's create our particle system
-         */
-
-        this.billboardParticles = BillboardParticleSystemModel.Create(nParticles, this.getTexture("particle"));
-        return this.billboardParticles
-    }
-
-    addExampleBilboardParticleSystem(nParticles:number=50){
-        this.addChild(this.CreateBilboardParticleSystem(nParticles))
-=======
         await appState.loadShaderMaterialModel("simpletexture");
         await appState.addShaderMaterialModel("blinnphong", ABlinnPhongShaderModel);
 
-        await this.loadTexture("./images/terrain/rock.jpg", "rock")
->>>>>>> origin
+        await this.loadTexture("./images/terrain/rock.jpg", "rock");
+        await this.loadTexture("./images/waterfallParticle.png", "waterfallParticle");
+        await this.loadTexture("./images/mistParticle.png", "mistParticle");
+        await this.loadTexture("./images/waterSurfaceParticle.png", "waterSurfaceParticle");
+    }
+
+    CreateBilboardParticleSystem(nParticles:number){
+        this.billboardWaterfallParticles = BillboardParticleSystemModel.Create(nParticles, this.getTexture("waterfallParticle"));
+        return this.billboardWaterfallParticles
+    }
+
+    addExampleBilboardParticleSystem(nParticles:number=30){
+        this.addChild(this.CreateBilboardParticleSystem(nParticles))
+    }
+
+    CreateBilboardParticleSystem2(nParticles:number){
+        this.billboardMistParticles = BillboardParticleSystemModel.Create(nParticles, this.getTexture("mistParticle"));
+        return this.billboardMistParticles
+    }
+
+    addExampleBilboardParticleSystem2(nParticles:number=30){
+        this.addChild(this.CreateBilboardParticleSystem2(nParticles))
+    }
+
+    CreateBilboardParticleSystem3(nParticles:number){
+        this.waterSurfaceParticles = ParticleSystemModel.Create(nParticles, this.getTexture("waterSurfaceParticle"));
+        return this.waterSurfaceParticles
+    }
+
+    addExampleBilboardParticleSystem3(nParticles:number=80){
+        this.addChild(this.CreateBilboardParticleSystem3(nParticles))
+    }
+
+    CreateBilboardParticleSystem4(nParticles:number){
+        this.billboardMistParticles2 = BillboardParticleSystemModel.Create(nParticles, this.getTexture("mistParticle"));
+        return this.billboardMistParticles2
+    }
+
+    addExampleBilboardParticleSystem4(nParticles:number=30){
+        this.addChild(this.CreateBilboardParticleSystem4(nParticles))
     }
 
 
@@ -124,11 +123,18 @@ export class MainSceneModel extends BaseSceneModel{
         this.terrain.reRollRandomHeightMap();
 
         /**
- * Let's add the cursor model but keep it invisible until an appropriate mode is activated
- * @type {boolean}
- */
+         * Let's add the cursor model but keep it invisible until an appropriate mode is activated
+         * @type {boolean}
+         */
         this.initCursorModel();
         this.cursorModel.visible = false;
+
+        // adding particle system
+        this.addExampleBilboardParticleSystem();
+        this.addExampleBilboardParticleSystem2();
+        this.addExampleBilboardParticleSystem3();
+        this.addExampleBilboardParticleSystem4();
+
     }
 
 
@@ -144,26 +150,6 @@ export class MainSceneModel extends BaseSceneModel{
         return newClickModel
     }
 
-<<<<<<< HEAD
-    /**
-     * Use this function to initialize the content of the scene.
-     * Generally, this will involve creating instances of ANodeModel subclasses and adding them as children of the scene:
-     * ```
-     * let myNewModel = new MyModelClass(...);
-     * this.addChild(myNewModel);
-     * ```
-     *
-     * You may also want to add tags to your models, which provide an additional way to control how they are rendered
-     * by the scene controller. See example code below.
-     */
-    initScene(){
-        this.addExampleBilboardParticleSystem();
-        let appState = GetAppState();
-        //let custommodel = CustomNode1Model.CreateTriangle();
-        // let mat = appState.CreateShaderMaterial("rgba");
-        // custommodel.setMaterial(mat);
-        // this.addChild(custommodel);
-=======
 
     onClick(event: AInteractionEvent) {
         console.log(event);
@@ -185,7 +171,6 @@ export class MainSceneModel extends BaseSceneModel{
 
     getCoordinatesForCursorEvent(event: AInteractionEvent) {
         return event.ndcCursor ?? new Vec2();
->>>>>>> origin
     }
 
 
@@ -203,7 +188,11 @@ export class MainSceneModel extends BaseSceneModel{
             t = args[0];
         }
 
-        this.billboardParticles.timeUpdate(t, this.camera);
+        this.waterSurfaceParticles.timeUpdate(t, this.camera, "waterSurface");
+        this.billboardWaterfallParticles.timeUpdate(t, this.camera, "waterfall");
+        this.billboardMistParticles.timeUpdate(t, this.camera, "mist");
+        this.billboardMistParticles2.timeUpdate(t, this.camera, "mist2");
+
 
         /**
          * If you want to update the react GUI components

@@ -1,6 +1,5 @@
 import {BaseSceneController} from "../../HelperClasses";
 import {
-    BillboardParticleSystemModel, BillboardParticleSystemView,
     BotModel,
     BotView, ExampleLoadedCharacterModel, ExampleLoadedView, ExampleParticleSystemModel, ExampleParticleSystemView,
     ExampleThreeJSNodeModel,
@@ -10,6 +9,9 @@ import {
     TerrainModel,
     TerrainView, TriangleMeshCharacterModel, TriangleMeshCharacterView
 } from "../Nodes";
+import {
+    BillboardParticleSystemModel, BillboardParticleSystemView
+} from "../../Main/Nodes/BillboardParticleSystem";
 import {ExamplePlayerInteractionMode, ExamplePointerLockInteractionMode} from "../InteractionModes";
 import {AGLContext, ANodeModel, ANodeView, GetAppState, Quaternion} from "../../../anigraph";
 import {ExampleSceneModel} from "./ExampleSceneModel";

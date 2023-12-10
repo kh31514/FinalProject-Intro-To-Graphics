@@ -1,6 +1,5 @@
 import {BaseSceneModel, CharacterInterface, CharacterModel, CharacterModelInterface} from "../../HelperClasses";
 import {
-    BillboardParticleSystemModel,
     BotModel,
     ExampleLoadedCharacterModel, ExampleParticleSystemModel,
     ExampleThreeJSNodeModel,
@@ -8,6 +7,8 @@ import {
     TerrainModel,
     TriangleMeshCharacterModel
 } from "../Nodes";
+
+import {BillboardParticleSystemModel} from "../../Main/Nodes/BillboardParticleSystem";
 import {
     AInteractionEvent,
     AModel,
@@ -396,7 +397,7 @@ export abstract class ExampleSceneModel extends BaseSceneModel {
 
 
     CreateBilboardParticleSystem(nParticles:number){
-        // BillboardParticleSystemModel.AddParticleSystemControls();
+        // ParticleSystemModel.AddParticleSystemControls();
         /**
          * And now let's create our particle system
          */

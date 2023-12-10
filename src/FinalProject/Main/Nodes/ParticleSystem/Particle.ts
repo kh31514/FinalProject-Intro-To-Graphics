@@ -5,7 +5,7 @@ import {Color, Vec3} from "../../../../anigraph";
 /**
  * A particle subclass for you to customize
  */
-export class BillboardParticle extends AParticle3D{
+export class Particle extends AParticle3D{
     color!:Color;
     t0:number=0;
 

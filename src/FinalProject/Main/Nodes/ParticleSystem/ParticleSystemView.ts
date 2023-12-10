@@ -1,23 +1,23 @@
-import {BillboardParticleSystemModel} from "./BillboardParticleSystemModel";
-import {Color, Mat3, Mat4, NodeTransform3D, Quaternion, Vec3} from "../../../../anigraph";
+import {ParticleSystemModel} from "./ParticleSystemModel";
+import {Color, GetAppState, Mat3, Mat4, NodeTransform3D, Quaternion, Vec3} from "../../../../anigraph";
 import {
     AInstancedParticleSystemGraphic, AInstancedParticleSystemView,
-} from "../../../../anigraph/effects/particles/InstancedParticles";
-import {BillboardParticleSystemGraphic} from "./BillboardParticleSystemGraphic";
-import {BillboardParticle} from "./BillboardParticle";
+} from "../../../../anigraph/effects";
+import {ParticleSystemGraphic} from "./ParticleSystemGraphic";
+import {Particle} from "./Particle";
 
-export class BillboardParticleSystemView extends AInstancedParticleSystemView<BillboardParticle>{
+export class ParticleSystemView extends AInstancedParticleSystemView<Particle>{
     static MAX_PARTICLES = 300;
 
-    get particlesElement():BillboardParticleSystemGraphic{
-        return this._particlesElement as BillboardParticleSystemGraphic;
+    get particlesElement():ParticleSystemGraphic{
+        return this._particlesElement as ParticleSystemGraphic;
     }
-    get model():BillboardParticleSystemModel{
-        return this._model as BillboardParticleSystemModel;
+    get model():ParticleSystemModel{
+        return this._model as ParticleSystemModel;
     }
 
-    createParticlesElement(...args:any[]): BillboardParticleSystemGraphic {
-        return AInstancedParticleSystemGraphic.Create(BillboardParticleSystemView.MAX_PARTICLES,
+    createParticlesElement(...args:any[]): ParticleSystemGraphic {
+        return AInstancedParticleSystemGraphic.Create(ParticleSystemView.MAX_PARTICLES,
             this.model.material);
     }
 
@@ -58,7 +58,8 @@ export class BillboardParticleSystemView extends AInstancedParticleSystemView<Bi
     _getTransformForParticleIndex(i: number): Mat4 {
         // throw new Error("Method not implemented.");
         let particle = this.model.particles[i];
-        let nt=new NodeTransform3D(particle.position,new Quaternion(), particle.size);
+        // let rot = new Quaternion();
+        let nt=new NodeTransform3D(particle.position, new Quaternion(), particle.size);
         return nt.getMat4();
     }
 

@@ -64,9 +64,7 @@ export class BillboardParticleSystemView extends AInstancedParticleSystemView<Bi
         let appState = GetAppState();
         let look = appState.sceneModel.camera.transform.position;
         let up = appState.sceneModel.camera.transform.anchor;
-
         let rot = Quaternion.FromCameraOrientationVectors(look,up);
-
         let nt=new NodeTransform3D(particle.position, rot, particle.size);
         return nt.getMat4();
     }
