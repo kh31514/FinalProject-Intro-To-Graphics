@@ -21,6 +21,8 @@ const SelectionOptions = [
     "Lab Cat Land"
 ]
 
+let startTime = 0;
+
 export class MainSceneModel extends ExampleSceneModel {
     billboardWaterfallParticles!: BillboardParticleSystemModel;
     billboardMistParticles!: BillboardParticleSystemModel;
@@ -158,6 +160,7 @@ export class MainSceneModel extends ExampleSceneModel {
                         this.addExampleBilboardParticleSystem2();
                         this.addExampleBilboardParticleSystem3();
                         this.addExampleBilboardParticleSystem4();
+                        startTime = this.clock.time;
                         break;
                     case SelectionOptions[2]:
                         this.terrain.clear()
@@ -169,6 +172,7 @@ export class MainSceneModel extends ExampleSceneModel {
                         this.addExampleBilboardParticleSystem2();
                         this.addExampleBilboardParticleSystem3();
                         this.addExampleBilboardParticleSystem4();
+                        startTime = this.clock.time;
                         break;
                     case SelectionOptions[3]:
                         this.terrain.clear()
@@ -180,6 +184,7 @@ export class MainSceneModel extends ExampleSceneModel {
                         this.addExampleBilboardParticleSystem2();
                         this.addExampleBilboardParticleSystem3();
                         this.addExampleBilboardParticleSystem4();
+                        startTime = this.clock.time;
                         break;
                     default:
                         console.log(`Unrecognized selection ${selection}`);
@@ -311,11 +316,14 @@ export class MainSceneModel extends ExampleSceneModel {
             t = args[0];
         }
 
-
-        this.waterSurfaceParticles.timeUpdate(t, this.camera, "waterSurface");
+        if (t > startTime + 1) {
+            this.waterSurfaceParticles.timeUpdate(t, this.camera, "waterSurface");
+        }
         this.billboardWaterfallParticles.timeUpdate(t, this.camera, "waterfall");
         this.billboardMistParticles.timeUpdate(t, this.camera, "mist");
-        this.billboardMistParticles2.timeUpdate(t, this.camera, "mist2");
+        if (t > startTime + 1) {
+            this.billboardMistParticles2.timeUpdate(t, this.camera, "mist2");
+        }
 
 
         // let pc = this.camera.position
