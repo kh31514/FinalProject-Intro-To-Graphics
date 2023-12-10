@@ -112,6 +112,7 @@ export abstract class _ANodeView extends AView{
         this._initializeThreeJSObject();
         this._threejs.matrixAutoUpdate=false;
         this.init();
+        this.update();
         this.setModelListeners()
     }
 
