@@ -27,6 +27,15 @@ export abstract class AInstancedParticleSystemModel<P extends AParticle<any>> ex
             this.ShaderModel = await this.ShaderModelClass.CreateModel(name??"instancedparticle", ...args)
         }
     }
+
+    /** Get set enableOpacity */
+    set useOpacity(value:boolean){
+        this.material.setUniform("opacityInMatrix", value);
+    }
+    get useOpacity(){
+        return this.material.getUniformValue("opacityInMatrix");
+    }
+
     static CreateMaterial(particleTexture?:ATexture, ...args:any[]):InstancedParticleSystemMaterial{
         let mat =  (this.ShaderModel.CreateMaterial(...args) as InstancedParticleSystemMaterial);
         if(particleTexture) {
