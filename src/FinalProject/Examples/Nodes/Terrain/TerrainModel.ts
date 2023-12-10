@@ -10,12 +10,21 @@ import { ADataTextureFloat1D } from "../../../../anigraph/rendering/image";
 import * as THREE from "three";
 import { makeNoise2D } from "fast-simplex-noise";
 import { BlinnPhongMaterial } from "../../../../anigraph/rendering/shadermodels";
+import { MainSceneModel } from "src/FinalProject/Main";
+import { GetAppState } from "../../../../anigraph";
+import { AppState } from "../../../../anigraph";
+// import Noise from 'noisejs';
 
-
-
+// Constants for terrain generation
+const scale = 0.1; // Scale factor for the noise (adjusts the frequency)
+const amplitude = 0.01; // Amplitude factor (adjusts the height range)
+enum AppStateKeys {
+    c = "c"
+}
 @ASerializable("TerrainModel")
 export class TerrainModel extends ATerrainModel {
-
+    static AppStateKeys = AppStateKeys;
+    c: number;
     useDataTexture: boolean = true;
 
     /**
@@ -34,6 +43,16 @@ export class TerrainModel extends ATerrainModel {
     textureWrapX: number = 5;
     textureWrapY: number = 5;
 
+    /**
+ * This is what you would use to add a listener to the custom update event
+ * @param callback
+ * @param handle
+ * @returns {AEventCallbackSwitch}
+ */
+    addUpdateListener(callback: (...args: any[]) => void, handle?: string) {
+        return this.addEventListener(TerrainModel.AppStateKeys.c, callback, handle);
+    }
+
     constructor(
         width?: number,
         height?: number,
@@ -44,16 +63,13 @@ export class TerrainModel extends ATerrainModel {
         textureWrapY?: number
     ) {
         super(width, height, widthSegments, heightSegments, transform);
+        this.c = GetAppState().getState(TerrainModel.AppStateKeys.c);
         if (textureWrapX !== undefined) { this.textureWrapX = textureWrapX; }
         if (textureWrapY !== undefined) { this.textureWrapY = textureWrapY; }
+
     }
 
     getTerrainHeightAtPoint(p: Vec2) {
-        //you can access height map pixels using something like this:
-        /**
-         *  you can access height map pixels using something like this:
-         *  this.heightMap.pixelData.getPixelNN(5, 5);
-         */
         return this.heightMap.pixelData.getPixelNN(p.x, p.y);
     }
 
@@ -79,10 +95,6 @@ export class TerrainModel extends ATerrainModel {
     }
 
     init(diffuseMap: ATexture, useDataTexture?: boolean) {
-
-        /**
-         * Set the diffuse color map if provided with a texture
-         */
         this.diffuseMap = diffuseMap;
 
         if (useDataTexture !== undefined) {
@@ -98,7 +110,7 @@ export class TerrainModel extends ATerrainModel {
             this.heightMap = ADataTextureFloat1D.CreateSolid(this.widthSegments, this.heightSegments, 0.5)
             this.heightMap.setMinFilter(THREE.LinearFilter);
             this.heightMap.setMagFilter(THREE.LinearFilter);
-            this.reRollHeightMap();
+            // this.reRollHeightMap();
         }
 
         let terrainMaterial = TerrainModel.ShaderModel.CreateMaterial(
@@ -110,86 +122,101 @@ export class TerrainModel extends ATerrainModel {
         this.setMaterial(terrainMaterial);
     }
 
-    /**
-     * Can be used to re-randomize height map
-     * You may find the code:
-     * ```
-     * let simplexNoise = makeNoise2D(randomgen.rand);
-     * let noiseAtXY = simplexNoise(x, y)
-     * ```
-     * Useful for generating simplex noise
-     *
-     * @param seed
-     * @param gridResX
-     * @param gridResY
-     */
-    reRollHeightMap(seed?: number, gridResX: number = 5, gridResY: number = 5) {
+    perlinNoise(x: number, y: number): number {
+        // Generate a pseudo-random gradient vector at this grid point
+        const v = (x * 15485863 + y * 101 + 23571) & 0xff; // Replace with your own pseudo-random function
+
+        // Pre-calculated gradient vectors (you can define your own gradients)
+        const gradients = [
+            [1, 1],
+            [-1, 1],
+            [1, -1],
+            [-1, -1]
+        ];
+        // Calculate dot product between gradient and distance vectors
+        const dx = x - Math.floor(x);
+        const dy = y - Math.floor(y);
+        const gradientIndex = (x + y) & 3;
+        const [gradX, gradY] = gradients[gradientIndex];
+        const dotProduct = dx * gradX + dy * gradY;
+
+        return dotProduct;
+    }
+
+    reRollRandomHeightMap(seed?: number, gridResX: number = 5, gridResY: number = 5) {
         for (let y = 0; y < this.heightMap.height; y++) {
             for (let x = 0; x < this.heightMap.width; x++) {
-                /**
-                 * For the starter code, we are just setting the map to 0
-                 */
-                this.heightMap.setPixelNN(x, y, 0);
-                // this.heightMap.setPixelNN(x, y, Math.sin(2*x)*0.2+Math.sin(2*y)*0.2);
+                this.heightMap.setPixelNN(x, y, Math.random() * 0.05);
+            }
+        }
+
+        this.heightMap.setTextureNeedsUpdate();
+    }
+
+
+    clear() {
+        for (let y = 0; y < this.heightMap.height; y++) {
+            for (let x = 0; x < this.heightMap.width; x++) {
+                this.heightMap.setPixelNN(x, y, -10000);
             }
         }
         this.heightMap.setTextureNeedsUpdate();
     }
 
-    /**
-     * Can be used to re-randomize height map
-     * You may find the code:
-     * ```
-     * let simplexNoise = makeNoise2D(randomgen.rand);
-     * let noiseAtXY = simplexNoise(x, y)
-     * ```
-     * Useful for generating simplex noise
-     *
-     * @param seed
-     * @param gridResX
-     * @param gridResY
-     */
-    reRollRandomHeightMap(seed?: number, gridResX: number = 5, gridResY: number = 5) {
+    perlinTerrain(c: number) {
+        let waterfall_width = 20
         let waterfall_height = 1
 
         for (let y = 0; y < this.heightMap.height; y++) {
+
             for (let x = 0; x < this.heightMap.width; x++) {
 
                 if (y > this.heightMap.height * 3 / 4) {
                     // raised terrain for the waterfall
                     this.heightMap.setPixelNN(x, y, Math.random() * 0.05 + waterfall_height);
                 }
-                else if (y > this.heightMap.height * 3 / 4 - 10) {
+                else if (y > this.heightMap.height * 3 / 4 - waterfall_width) {
                     // sloping part of waterfall
                     // calculate the height, then change slightly based on randomness
-                    let slope = waterfall_height / 10
-                    let height = slope * (y - (this.heightMap.width * 3 / 4 - 10))
+                    let slope = waterfall_height / waterfall_width
+                    let t = y - (this.heightMap.width * 3 / 4 - waterfall_width)
+                    let sigmoid_output = waterfall_height / (1 + Math.exp(-6 * (t - waterfall_width / 2) / waterfall_width))
+                    //let height = slope * (y - (this.heightMap.width * 3 / 4 - 10))
+                    let height = sigmoid_output
 
                     this.heightMap.setPixelNN(x, y, Math.random() * 0.05 + height);
                 }
                 else if (x > this.heightMap.width * 3.5 / 8 && x < this.heightMap.width * 4.5 / 8 && y < this.heightMap.height * 5 / 8) {
                     // todo: make the elevation a little more natural here, maybe based on squared diff from center
-                    this.heightMap.setPixelNN(x, y, Math.random() * 0.05 - .5);
+                    let center_dist = Math.abs(x - this.heightMap.width / 2)
+                    let stream_height = .5
+                    let stream_width = this.heightMap.width / 16
+                    let sigmoid_output = stream_height / (1 + Math.exp(-6 * (center_dist - stream_width / 2) / stream_width))
+                    this.heightMap.setPixelNN(x, y, Math.random() * 0.05 - .5 + sigmoid_output);
                 }
                 else {
-                    this.heightMap.setPixelNN(x, y, Math.random() * 0.05);
-                    //this.heightMap.setPixelNN(x, y, Math.sin(2 * x) * 0.2 + Math.sin(2 * y) * 0.2);
+                    let noiseValue = this.perlinNoise(x * scale, y * scale);
+                    let heightValue = Math.floor(amplitude * noiseValue);
+                    const rolling = Math.sin(x * 0.1) * Math.cos(y * 0.1) * 5; // Adjust the rolling effect here
+                    const rolledHeight = heightValue + rolling;
+                    this.heightMap.setPixelNN(x, y, c * rolledHeight);
                 }
-
             }
         }
-
         this.heightMap.setTextureNeedsUpdate();
     }
 
-    // TODO: method to let the player change the terrain
     playerInteraction(x: number, y: number, change: number) {
+
+        //this.reRollRandomHeightMap(1)
         for (let i = y - 5; i < y + 5; i++) {
-            for (let j = x - 5; j < x - 5; j++) {
+            for (let j = x - 5; j < x + 5; j++) {
                 // TODO make the edges less rigid
                 this.heightMap.setPixelNN(i, j, this.heightMap.pixelData.getPixelNN(x, y) + change);
+                //this.heightMap.setPixelNN(j, i, 10);
             }
         }
+        this.heightMap.setTextureNeedsUpdate();
     }
 
 

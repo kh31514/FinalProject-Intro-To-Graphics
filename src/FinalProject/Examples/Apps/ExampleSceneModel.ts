@@ -1,4 +1,4 @@
-import {BaseSceneModel, CharacterInterface, CharacterModel, CharacterModelInterface} from "../../HelperClasses";
+import { BaseSceneModel, CharacterInterface, CharacterModel, CharacterModelInterface } from "../../HelperClasses";
 import {
     BotModel,
     ExampleLoadedCharacterModel, ExampleParticleSystemModel,
@@ -8,7 +8,7 @@ import {
     TriangleMeshCharacterModel
 } from "../Nodes";
 
-import {BillboardParticleSystemModel} from "../../Main/Nodes/BillboardParticleSystem";
+import { BillboardParticleSystemModel } from "../../Main/Nodes/BillboardParticleSystem";
 import {
     AInteractionEvent,
     AModel,
@@ -25,25 +25,25 @@ import {
 
 const N_CAT_TEXTURES = 6;
 
-enum TEXTURES{
-    TERRAIN="ground01",
+enum TEXTURES {
+    TERRAIN = "ground01",
 }
 
 export abstract class ExampleSceneModel extends BaseSceneModel {
     /**
      * Our custom terrain model
      */
-    terrain!:TerrainModel;
+    terrain!: TerrainModel;
     /**
      * An array of bots...
      */
-    bots:BotModel[]=[];
+    bots: BotModel[] = [];
 
     /**
      * Cursor model
      * @type {ATriangleMeshModel}
      */
-    cursorModel!:ATriangleMeshModel;
+    cursorModel!: ATriangleMeshModel;
 
 
     /**
@@ -51,21 +51,21 @@ export abstract class ExampleSceneModel extends BaseSceneModel {
      * Actually, it's to support more flexible subclassing behavior, but let's let the player *think* it's because they
      * are special...
      */
-    _player!:CharacterModelInterface;
-    get player():CharacterModel{
+    _player!: CharacterModelInterface;
+    get player(): CharacterModel {
         return this._player as CharacterModel;
     }
-    set player(v:CharacterModel){
+    set player(v: CharacterModel) {
         this._player = v;
     }
 
     //###############################################--Example asset loading--###############################################
 
-    async loadBotTexture(i:number){
+    async loadBotTexture(i: number) {
         await this.loadTexture(`./images/catfaces/catface0${i + 1}.jpeg`, `cat${i}`)
     }
 
-    getBotTexture(i:number){
+    getBotTexture(i: number) {
         return this.getTexture(`cat${i}`);
     }
 
@@ -87,33 +87,33 @@ export abstract class ExampleSceneModel extends BaseSceneModel {
         await BillboardParticleSystemModel.LoadShaderModel();
     }
 
-    async LoadExampleTextures(){
+    async LoadExampleTextures() {
         /**
          * Let's load some example textures
          */
         await this.loadTexture("./images/gradientParticle.png", "particle")
         await this.loadTexture("./images/tanktexburngreen.jpeg", "tank")
-        await this.loadTexture( "./images/terrain/ground01.jpeg", "ground01")
-        for(let i=0;i<N_CAT_TEXTURES;i++){
+        await this.loadTexture("./images/terrain/ground01.jpeg", "ground01")
+        for (let i = 0; i < N_CAT_TEXTURES; i++) {
             await this.loadBotTexture(i)
         }
         // await ExampleParticleSystemModel.LoadShaderModel();
         // this.materials.setMaterialModel("textured", await ABasicShaderModel.CreateModel("basic"));
     }
 
-    async LoadSimpleTextureShader(){
+    async LoadSimpleTextureShader() {
         await GetAppState().loadShaderMaterialModel("simpletexture");
     }
 
-    async LoadCursorTexture(cursorTexturePath?:string){
-        cursorTexturePath = cursorTexturePath??"./images/LabCatFloatingHeadSmall.png"
+    async LoadCursorTexture(cursorTexturePath?: string) {
+        cursorTexturePath = cursorTexturePath ?? "./images/LabCatFloatingHeadSmall.png"
         await this.loadTexture(cursorTexturePath, "cursor");
     }
 
     //###############################################//--Load The Dragon!--\\###############################################
     //<editor-fold desc="Load The Dragon!">
-    async LoadTheDragon(){
-        let makeDragonPointDownYAxis = NodeTransform3D.RotationX(Math.PI*0.5);
+    async LoadTheDragon() {
+        let makeDragonPointDownYAxis = NodeTransform3D.RotationX(Math.PI * 0.5);
         await this.load3DModel("./models/ply/dragon.ply", "dragon", makeDragonPointDownYAxis);
     }
     //</editor-fold>
@@ -126,16 +126,16 @@ export abstract class ExampleSceneModel extends BaseSceneModel {
      * Normally we would do this at the top of the class definition, but we're putting them here to associate them
      * with the rest of the cat-model-related content.
      */
-    static CAT_MODEL_STRING_IDENTIFIER:string="CatModel"; // we will use this to keep track of the 3D model and texture
-    catModelMaterial!:AShaderMaterial;
+    static CAT_MODEL_STRING_IDENTIFIER: string = "CatModel"; // we will use this to keep track of the 3D model and texture
+    catModelMaterial!: AShaderMaterial;
 
     /**
      * Here we are going to load a 3D cat model and corresponding cat texture.
      * @returns {Promise<void>}
      * @constructor
      */
-    async LoadTheCat(){
-        let appState=GetAppState();
+    async LoadTheCat() {
+        let appState = GetAppState();
         /**
          *
          *
@@ -153,7 +153,7 @@ export abstract class ExampleSceneModel extends BaseSceneModel {
         await this.loadTexture("./models/gltf/Cat_diffuse.jpg", ExampleSceneModel.CAT_MODEL_STRING_IDENTIFIER)
     }
 
-    createTexturedSquareVerts(){
+    createTexturedSquareVerts() {
         /**
          * Create a vertex array with texture coordinates (and no normals)
          * @type {VertexArray3D}
@@ -164,39 +164,39 @@ export abstract class ExampleSceneModel extends BaseSceneModel {
          * Add 4 verts with the included attributes (position and texture coords)
          */
         verts.addVertex(
-            V3(-1,-1,0), // position
+            V3(-1, -1, 0), // position
             undefined, // no normal
-            V2(0,0) // texture coordinate
+            V2(0, 0) // texture coordinate
         )
 
         verts.addVertex(
-            V3(1,-1,0), // position
+            V3(1, -1, 0), // position
             undefined, // no normal
-            V2(1,0) // texture coordinate
+            V2(1, 0) // texture coordinate
         )
 
         verts.addVertex(
-            V3(1,1,0), // position
+            V3(1, 1, 0), // position
             undefined, // no normal
-            V2(1,1) // texture coordinate
+            V2(1, 1) // texture coordinate
         )
 
         verts.addVertex(
-            V3(-1,1,0), // position
+            V3(-1, 1, 0), // position
             undefined, // no normal
-            V2(0,1) // texture coordinate
+            V2(0, 1) // texture coordinate
         )
 
         /**
          * Make two triangles out of the 4 verts
          */
-        verts.addTriangleIndices(0,1,2);
-        verts.addTriangleIndices(2,3,0);
+        verts.addTriangleIndices(0, 1, 2);
+        verts.addTriangleIndices(2, 3, 0);
         return verts;
     }
 
 
-    initCursorModel(){
+    initCursorModel() {
         let appState = GetAppState();
         this.cursorModel = new ATriangleMeshModel();
         let verts = this.createTexturedSquareVerts();
@@ -229,8 +229,8 @@ export abstract class ExampleSceneModel extends BaseSceneModel {
      * @returns {LoadedCharacterModel}
      * @constructor
      */
-    CreateCatModel(){
-        if(!this.get3DModel(ExampleSceneModel.CAT_MODEL_STRING_IDENTIFIER)){
+    CreateCatModel() {
+        if (!this.get3DModel(ExampleSceneModel.CAT_MODEL_STRING_IDENTIFIER)) {
             throw new Error("You need to load the cat assets using LoadTheCat() in PreloadAssets!")
         }
 
@@ -261,8 +261,8 @@ export abstract class ExampleSceneModel extends BaseSceneModel {
 
     //###############################################//--Some custom Bot objects--\\###############################################
     //<editor-fold desc="Some custom Bot objects">
-    addBotHierarchy(){
-        if(!this.terrain){
+    addBotHierarchy() {
+        if (!this.terrain) {
             throw new Error("Must initialize terrain before adding bot hierarchy... they need something to stand on.")
         }
 
@@ -270,8 +270,8 @@ export abstract class ExampleSceneModel extends BaseSceneModel {
          * Let's create a bunch of bots with different cat faces...
          * Here we will make each one a child of the last.
          */
-        let parent:AModel = this;
-        for(let e=0;e<6; e++) {
+        let parent: AModel = this;
+        for (let e = 0; e < 6; e++) {
             let bot = BotModel.Create(this.getBotTexture(e));
             bot.position = new Vec3((Math.random() - 0.5) * this.terrain.width, (Math.random() - 0.5) * this.terrain.height, 0);
             bot.mass = 50;
@@ -283,26 +283,26 @@ export abstract class ExampleSceneModel extends BaseSceneModel {
     //</editor-fold>
 
 
-    initCamera(...args:any[]) {
+    initCamera(...args: any[]) {
         const appState = GetAppState();
-        this.initPerspectiveCameraFOV(0.5*Math.PI, 1.0)
+        this.initPerspectiveCameraFOV(0.5 * Math.PI, 1.0)
 
         // We will set the camera based on a location, direction, and up vector
         // let cameraPose = NodeTransform3D.LookAt(V3(0,0,1), V3(), V3(0,1,0));
         // this.camera.setPose(cameraPose);
     }
 
-    initTerrain(texture_name?:string){
+    initTerrain(texture_name?: string) {
         let appState = GetAppState();
-        let terrainScaleX= appState.globalScale*10.0;
-        let terrainScaleY= appState.globalScale*10.0;
+        let terrainScaleX = appState.globalScale * 10.0;
+        let terrainScaleY = appState.globalScale * 10.0;
         let terrainTextureWidth = 128;
         let terrainTextureHeight = 128;
         let terrainTextureWrapX = 15.0;
         let terrainTextureWrapY = 15.0;
 
         this.terrain = TerrainModel.Create(
-            this.getTexture(texture_name??"ground01"), // texture
+            this.getTexture(texture_name ?? "ground01"), // texture
             terrainScaleX, // scaleX
             terrainScaleY, // scaleY
             terrainTextureWidth, // number of vertices wide
@@ -312,36 +312,37 @@ export abstract class ExampleSceneModel extends BaseSceneModel {
             terrainTextureWrapY, // number of times texture should wrap across surface in Y
         );
         this.addChild(this.terrain);
+        console.log("Here")
     }
 
     /**
      * Adds a very basic rgb triangle for testing / debugging purposes
      */
-    addDebugTriangle(){
+    addDebugTriangle() {
         let model = ATriangleMeshModel.Create(false,
             false,
             true);
         let material = GetAppState().materials.createRGBAShaderMaterial();
         model.setMaterial(material);
         model.verts.addVertex(V3(), undefined, undefined, Color.FromRGBA(1.0, 0.0, 0.0, 1.0));
-        model.verts.addVertex(V3(1, 1,0), undefined, undefined, Color.FromRGBA(0.0, 1.0, 0.0, 1.0));
-        model.verts.addVertex(V3(1, 0,0), undefined, undefined, Color.FromRGBA(0.0, 0.0, 1.0, 1.0));
-        model.verts.indices.push([0,1,2])
+        model.verts.addVertex(V3(1, 1, 0), undefined, undefined, Color.FromRGBA(0.0, 1.0, 0.0, 1.0));
+        model.verts.addVertex(V3(1, 0, 0), undefined, undefined, Color.FromRGBA(0.0, 0.0, 1.0, 1.0));
+        model.verts.indices.push([0, 1, 2])
         this.addChild(model);
     }
 
-    addExampleThreeJSNodeModel(){
+    addExampleThreeJSNodeModel() {
         this.addChild(new ExampleThreeJSNodeModel());
     }
 
 
-    addBotsInHierarchy(){
+    addBotsInHierarchy() {
         /**
          * Then we will create a bunch of bots with different cat faces...
          * Let's make each one a child of the last.
          */
-        let parent:AModel = this;
-        for(let e=0;e<6; e++) {
+        let parent: AModel = this;
+        for (let e = 0; e < 6; e++) {
             let bot = BotModel.Create(this.getBotTexture(e));
             bot.position = new Vec3((Math.random() - 0.5) * this.terrain.width, (Math.random() - 0.5) * this.terrain.height, 0);
             bot.mass = 50;
@@ -355,17 +356,17 @@ export abstract class ExampleSceneModel extends BaseSceneModel {
      * Initialized a tank player and adds it to the scene
      * @param texture
      */
-    initTankPlayer(texture?:ATexture){
+    initTankPlayer(texture?: ATexture) {
         /**
          * First we will initialze the player and add it to the scene.
          */
-        this.player = PlayerModel.Create(texture??this.getTexture("tank"));
+        this.player = PlayerModel.Create(texture ?? this.getTexture("tank"));
         this.addChild(this.player);
     }
 
-    initDragonPlayer(material?:AShaderMaterial){
-        let playerMaterial =material?? CharacterModel.CreateMaterial();
-        playerMaterial.usesVertexColors=true;
+    initDragonPlayer(material?: AShaderMaterial) {
+        let playerMaterial = material ?? CharacterModel.CreateMaterial();
+        playerMaterial.usesVertexColors = true;
         this.player = ExampleLoadedCharacterModel.Create(
             this.get3DModel("dragon"),
             playerMaterial
@@ -373,31 +374,33 @@ export abstract class ExampleSceneModel extends BaseSceneModel {
         this.addChild(this.player)
     }
 
-    initCatPlayer(){
+    initCatPlayer() {
         this.player = this.CreateCatModel();
         this.addChild(this.player);
     }
 
-    CreateExampleBasicParticleSystem(n:number){
+    CreateExampleBasicParticleSystem(n: number) {
         /**
          * Now an example particle system.
          */
         let particles = new ExampleParticleSystemModel();
         particles.orbitRadius = 0.3;
         let radius = 0.05;
-        for(let i=0;i<n;i++) {
+        for (let i = 0; i < n; i++) {
             particles.addParticle(new SphereParticle(undefined, undefined, radius));
         }
         return particles;
     }
 
-    addExampleThreeJSNode(){
+    addExampleThreeJSNode() {
         this.addChild(new ExampleThreeJSNodeModel());
     }
 
 
-    CreateBilboardParticleSystem(nParticles:number){
+
+    CreateBilboardParticleSystem(nParticles: number) {
         // ParticleSystemModel.AddParticleSystemControls();
+
         /**
          * And now let's create our particle system
          */
@@ -406,19 +409,19 @@ export abstract class ExampleSceneModel extends BaseSceneModel {
         return billboardParticles
     }
 
-    addExampleBilboardParticleSystem(nParticles:number=50){
+    addExampleBilboardParticleSystem(nParticles: number = 50) {
         this.addChild(this.CreateBilboardParticleSystem(nParticles))
     }
 
-    timeUpdateOrbitBots(t:number, ...args:any[]) {
+    timeUpdateOrbitBots(t: number, ...args: any[]) {
         /**
          * For interactions between models, we can trigger logic here. For example, if you want characters to walk on
          * uneven terrain, you can make that happen by completing the functions used here:
          */
         const self = this;
-        function adjustHeight(character:Particle3D){
+        function adjustHeight(character: Particle3D) {
             let height = self.terrain.getTerrainHeightAtPoint(character.position.xy);
-            if(character.position.z<height){character.position.z = height;}
+            if (character.position.z < height) { character.position.z = height; }
         }
 
         /**
@@ -430,14 +433,14 @@ export abstract class ExampleSceneModel extends BaseSceneModel {
          * Now lets update bots
          */
         let orbitradius = 0.25;
-        for(let ei=0;ei<this.bots.length;ei++){
+        for (let ei = 0; ei < this.bots.length; ei++) {
             let e = this.bots[ei];
 
             /**
              * Characters have velocity and mass properties in case you want to implement particle physics
              * But for now we will just have them orbit each other.
              */
-            e.position = new Vec3(Math.cos(t*(ei+1)), Math.sin(t*(ei+1)),0).times(orbitradius);
+            e.position = new Vec3(Math.cos(t * (ei + 1)), Math.sin(t * (ei + 1)), 0).times(orbitradius);
 
             /**
              * adjust their height
@@ -446,18 +449,18 @@ export abstract class ExampleSceneModel extends BaseSceneModel {
         }
     }
 
-    timeUpdateDescendants(t:number, ...args:any[]) {
+    timeUpdateDescendants(t: number, ...args: any[]) {
         /**
          * We can call timeUpdate on all of the model nodes in the scene here, which will trigger any updates that they
          * individually define.
          */
-        for(let c of this.getDescendantList()){
+        for (let c of this.getDescendantList()) {
             c.timeUpdate(t);
         }
     }
 
-    getCoordinatesForCursorEvent(event: AInteractionEvent){
-        return event.ndcCursor??new Vec2();
+    getCoordinatesForCursorEvent(event: AInteractionEvent) {
+        return event.ndcCursor ?? new Vec2();
     }
 }
 
