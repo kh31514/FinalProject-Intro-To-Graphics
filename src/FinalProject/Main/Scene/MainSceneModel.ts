@@ -5,35 +5,28 @@ import {
     V3, V4, Vec2, VertexArray3D
 } from "src/anigraph";
 import {
-    BillboardParticleSystemModel,
+    BillboardParticleSystemModel, TerrainModel,
 } from "src/FinalProject/Examples/Nodes";
 import { ExampleSceneModel } from "src/FinalProject/Examples/Apps/ExampleSceneModel";
 import { ABlinnPhongShaderModel } from "src/anigraph/rendering/shadermodels";
+
 export class MainSceneModel extends ExampleSceneModel {
     billboardParticles!: BillboardParticleSystemModel;
 
-    /**
-     * Optionally add some app state here. Good place to set up custom control panel controls.
-     * @param appState
-     */
     initAppState(appState: AppState): void {
-
+        TerrainModel.initAppState(appState);
     }
 
-
     async PreloadAssets() {
+        let appState = GetAppState();
         await super.PreloadAssets();
         await this.LoadExampleTextures();
         await this.LoadExampleModelClassShaders()
-
         await this.LoadCursorTexture();
-        let appState = GetAppState();
         await appState.loadShaderMaterialModel("simpletexture");
         await appState.addShaderMaterialModel("blinnphong", ABlinnPhongShaderModel);
-
         await this.loadTexture("./images/terrain/rock.jpg", "rock")
     }
-
 
     initCamera() {
         super.initCamera();
@@ -47,32 +40,26 @@ export class MainSceneModel extends ExampleSceneModel {
         )
     }
 
-
     initScene() {
-        /**
-         * We need to add a light before we can see anything.
-         * The easiest thing is to just attach a point light to the camera.
-         */
         this.addViewLight();
-
-        /**
-         * initialize terrain
-         */
         this.initTerrain("rock");
-
-        /**
-         * Let's generate a random slightly bumpy terrain.
-         * It's just uniform random bumps right now, nothing fancy.
-         */
-        this.terrain.reRollRandomHeightMap();
-
-        /**
- * Let's add the cursor model but keep it invisible until an appropriate mode is activated
- * @type {boolean}
- */
-        this.initCursorModel();
-        this.cursorModel.visible = false;
+        this.terrain.perlinTerrain();
     }
+
+
+    /**
+     * Let's generate a random slightly bumpy terrain.
+     * It's just uniform random bumps right now, nothing fancy.
+     */
+    // this.terrain.reRollRandomHeightMap();
+
+    /**
+    * Let's add the cursor model but keep it invisible until an appropriate mode is activated
+    * @type {boolean}
+    */
+    // this.initCursorModel();
+    // this.cursorModel.visible = false;
+
 
 
 
@@ -169,7 +156,7 @@ export class MainSceneModel extends ExampleSceneModel {
                 ).times(appState.globalScale),
                 Quaternion.RotationY(-Math.PI * 0.5).times(Quaternion.RotationX(-Math.PI * 0.25))
             )
-
+    
         )
         this.addChild(newModel); */
     }
@@ -192,12 +179,6 @@ export class MainSceneModel extends ExampleSceneModel {
         if (args != undefined && args.length > 0) {
             t = args[0];
         }
-
-        /**
-         * If you want to update the react GUI components
-         */
-        // GetAppState().updateComponents();
-
     }
 
 
