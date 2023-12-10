@@ -143,6 +143,17 @@ export class TerrainModel extends ATerrainModel {
         return dotProduct;
     }
 
+    reRollRandomHeightMap(seed?: number, gridResX: number = 5, gridResY: number = 5) {
+        for (let y = 0; y < this.heightMap.height; y++) {
+            for (let x = 0; x < this.heightMap.width; x++) {
+                this.heightMap.setPixelNN(x, y, Math.random() * 0.05);
+            }
+        }
+
+        this.heightMap.setTextureNeedsUpdate();
+    }
+
+
     clear() {
         for (let y = 0; y < this.heightMap.height; y++) {
             for (let x = 0; x < this.heightMap.width; x++) {
@@ -152,16 +163,36 @@ export class TerrainModel extends ATerrainModel {
         this.heightMap.setTextureNeedsUpdate();
     }
 
-
-
     perlinTerrain(c: number) {
+        let waterfall_height = 1
+
         for (let y = 0; y < this.heightMap.height; y++) {
+
             for (let x = 0; x < this.heightMap.width; x++) {
-                let noiseValue = this.perlinNoise(x * scale, y * scale);
-                let heightValue = Math.floor(amplitude * noiseValue);
-                const rolling = Math.sin(x * 0.1) * Math.cos(y * 0.1) * 5; // Adjust the rolling effect here
-                const rolledHeight = heightValue + rolling;
-                this.heightMap.setPixelNN(x, y, c * rolledHeight);
+
+                if (y > this.heightMap.height * 3 / 4) {
+                    // raised terrain for the waterfall
+                    this.heightMap.setPixelNN(x, y, Math.random() * 0.05 + waterfall_height);
+                }
+                else if (y > this.heightMap.height * 3 / 4 - 10) {
+                    // sloping part of waterfall
+                    // calculate the height, then change slightly based on randomness
+                    let slope = waterfall_height / 10
+                    let height = slope * (y - (this.heightMap.width * 3 / 4 - 10))
+
+                    this.heightMap.setPixelNN(x, y, Math.random() * 0.05 + height);
+                }
+                else if (x > this.heightMap.width * 3.5 / 8 && x < this.heightMap.width * 4.5 / 8 && y < this.heightMap.height * 5 / 8) {
+                    // todo: make the elevation a little more natural here, maybe based on squared diff from center
+                    this.heightMap.setPixelNN(x, y, Math.random() * 0.05 - .5);
+                }
+                else {
+                    let noiseValue = this.perlinNoise(x * scale, y * scale);
+                    let heightValue = Math.floor(amplitude * noiseValue);
+                    const rolling = Math.sin(x * 0.1) * Math.cos(y * 0.1) * 5; // Adjust the rolling effect here
+                    const rolledHeight = heightValue + rolling;
+                    this.heightMap.setPixelNN(x, y, c * rolledHeight);
+                }
             }
         }
         this.heightMap.setTextureNeedsUpdate();
