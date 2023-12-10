@@ -7,38 +7,42 @@ import {
     AKeyboardInteraction, ANodeModel3D, ASceneController,
     ASceneModel,
     ASerializable, AWheelInteraction, NodeTransform3D,
-    SetInteractionCallbacks, V2, V4
+    SetInteractionCallbacks, V2, V4, Vec3
 } from "../../../anigraph";
-import type {HasInteractionModeCallbacks} from "../../../anigraph";
-import {ASceneInteractionMode} from "../../../anigraph/starter";
-import {ExampleSceneModel} from "../Apps/ExampleSceneModel";
+import type { HasInteractionModeCallbacks } from "../../../anigraph";
+import { ASceneInteractionMode } from "../../../anigraph/starter";
+import { ExampleSceneModel } from "../Apps/ExampleSceneModel";
 
 
-interface IsSceneModelWithRequirements extends ASceneModel{
+interface IsSceneModelWithRequirements extends ASceneModel {
     // Put any expected functions of supported scene models here
-    onClick(event:AInteractionEvent):void;
-    cursorModel:ANodeModel3D;
+    onClick(event: AInteractionEvent): void;
+    onKeyDown(event: AInteractionEvent, interaction: AKeyboardInteraction): void;
+
+    cursorModel: ANodeModel3D;
 }
 
 @ASerializable("ExampleClickInteractionMode")
-export class ExampleClickInteractionMode extends ASceneInteractionMode{
+export class ExampleClickInteractionMode extends ASceneInteractionMode {
     static MODE_NAME = "Custom Mode"
+
+    keyboardMovementSpeed: number = 0.25;
 
     /**
      * Here we are simply defining our model getter to cast our scene model as one with the required interface implemented
      * @returns {IsSceneModelWithRequirements}
      */
-    get model():IsSceneModelWithRequirements{
+    get model(): IsSceneModelWithRequirements {
         return (this.owner.model as IsSceneModelWithRequirements);
     }
 
-    get owner():ASceneController{
+    get owner(): ASceneController {
         return this._owner as ASceneController;
     }
 
-    updateCursor(event:AInteractionEvent){
+    updateCursor(event: AInteractionEvent) {
         let ndcCursor = event.ndcCursor;
-        if(ndcCursor) {
+        if (ndcCursor) {
 
             /**
              * The cursor in NDC coordinates (randing from -1 to 1 across the x and y dimensions of your rendering window), as a homogeneous 3D vector at depth 0 in NDC space
@@ -70,17 +74,40 @@ export class ExampleClickInteractionMode extends ASceneInteractionMode{
      * Our click response will simply call whatever `onClick` method is defined in our model
      * @param event
      */
-    onClick(event:AInteractionEvent):void{
+    onClick(event: AInteractionEvent): void {
         this.model.onClick(event);
     }
 
-    // onKeyDown(event:AInteractionEvent, interaction:AKeyboardInteraction){}
+    onKeyDown(event: AInteractionEvent, interaction: AKeyboardInteraction) {
+        if (interaction.keysDownState['w']) {
+            // this.camera.setPosition(this.camera.position.plus(new Vec3(0, this.keyboardMovementSpeed, 0)))
+            this.cameraModel.setTargetPosition(this.camera.position.plus(new Vec3(0, this.keyboardMovementSpeed, 0)));
+        }
+        if (interaction.keysDownState['a']) {
+            // this.camera.setPosition(this.camera.position.plus(new Vec3(-this.keyboardMovementSpeed, 0, 0)))
+            this.cameraModel.setTargetPosition(this.camera.position.plus(new Vec3(-this.keyboardMovementSpeed, 0, 0)));
+        }
+        if (interaction.keysDownState['s']) {
+            // this.camera.setPosition(this.camera.position.plus(new Vec3(0, -this.keyboardMovementSpeed, 0)))
+            this.cameraModel.setTargetPosition(this.camera.position.plus(new Vec3(0, -this.keyboardMovementSpeed, 0)));
+        }
+        if (interaction.keysDownState['d']) {
+            // this.camera.setPosition(this.camera.position.plus(new Vec3(this.keyboardMovementSpeed, 0, 0)))
+            this.cameraModel.setTargetPosition(this.camera.position.plus(new Vec3(this.keyboardMovementSpeed, 0, 0)));
+        }
+        if (interaction.keysDownState['ArrowUp']) {
+            this.cameraModel.setTargetPosition(this.camera.position.plus(new Vec3(0, 0, this.keyboardMovementSpeed)));
+        }
+        if (interaction.keysDownState['ArrowDown']) {
+            this.cameraModel.setTargetPosition(this.camera.position.plus(new Vec3(0, 0, -this.keyboardMovementSpeed)));
+        }
+    }
     // onKeyUp(event:AInteractionEvent, interaction:AKeyboardInteraction){}
     // onWheelMove(event:AInteractionEvent, interaction?:AWheelInteraction){}
-    onMouseMove(event:AInteractionEvent, interaction?: ADOMPointerMoveInteraction){
+    onMouseMove(event: AInteractionEvent, interaction?: ADOMPointerMoveInteraction) {
         this.updateCursor(event);
     }
-    onDragStart(event:AInteractionEvent, interaction:ADragInteraction){
+    onDragStart(event: AInteractionEvent, interaction: ADragInteraction) {
         this.updateCursor(event);
     }
     // onDragMove(event:AInteractionEvent, interaction:ADragInteraction){}
@@ -90,18 +117,18 @@ export class ExampleClickInteractionMode extends ASceneInteractionMode{
      * We will make the cursor visible when this mode is activated
      * @param args
      */
-    beforeActivate(...args:any[]) {
+    beforeActivate(...args: any[]) {
         super.beforeActivate(...args);
-        this.model.cursorModel.visible=true;
+        this.model.cursorModel.visible = true;
     }
 
     /**
      * We will make the cursor invisible when this mode is deactivated
      * @param args
      */
-    beforeDeactivate(...args:any[]) {
+    beforeDeactivate(...args: any[]) {
         super.beforeDeactivate(...args);
-        this.model.cursorModel.visible=false;
+        this.model.cursorModel.visible = false;
     }
 
     /**
@@ -122,7 +149,7 @@ export class ExampleClickInteractionMode extends ASceneInteractionMode{
      * This is the DOM element that is the game window being controlled
      * @type {HTMLElement}
      */
-    get domElement():HTMLElement{
+    get domElement(): HTMLElement {
         return this.owner._renderWindow.container;
     }
 
