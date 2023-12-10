@@ -12,10 +12,11 @@ import { ABlinnPhongShaderModel } from "src/anigraph/rendering/shadermodels";
 export class MainSceneModel extends ExampleSceneModel {
     latency: number = 1;
     delta_t: number = 0;
+    last_t: number = 0;
 
     get dt() { return this.delta_t; }
     setDt(t: number) {
-        this.delta_t = this.delta_t + t
+        this.delta_t = t
     }
 
     billboardParticles!: BillboardParticleSystemModel;
@@ -155,10 +156,14 @@ export class MainSceneModel extends ExampleSceneModel {
         }
         let pc = this.camera.position
         let pt = this.cameraModel.targetPosition
-        // this.setDt(0.01)
-        let pos = pc.plus((pt.minus(pc)).times(Math.min(1, t / this.latency)))
+        this.setDt(this.delta_t + 0.1)
+
+        let dt = t - this.last_t
+
+        let pos = pc.plus((pt.minus(pc)).times(Math.min(1, dt / this.latency)))
         this.camera.setPosition(pos)
 
+        this.last_t = t
         // if (this.dt == 1) {
         //     this.setDt(0)
         // }

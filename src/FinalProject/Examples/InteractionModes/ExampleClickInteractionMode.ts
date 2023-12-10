@@ -26,7 +26,8 @@ interface IsSceneModelWithRequirements extends ASceneModel {
 export class ExampleClickInteractionMode extends ASceneInteractionMode {
     static MODE_NAME = "Custom Mode"
 
-    keyboardMovementSpeed: number = 0.25;
+    keyboardMovementSpeed: number = 1;
+    keyboardRotationAngle: number = 0.05;
 
     /**
      * Here we are simply defining our model getter to cast our scene model as one with the required interface implemented
@@ -82,18 +83,32 @@ export class ExampleClickInteractionMode extends ASceneInteractionMode {
         if (interaction.keysDownState['w']) {
             // this.camera.setPosition(this.camera.position.plus(new Vec3(0, this.keyboardMovementSpeed, 0)))
             this.cameraModel.setTargetPosition(this.camera.position.plus(new Vec3(0, this.keyboardMovementSpeed, 0)));
+
+            //forward in the direction the camera is facing
+            this.cameraModel.setTargetPosition(this.camera.position.plus(this.camera.forward));
         }
         if (interaction.keysDownState['a']) {
             // this.camera.setPosition(this.camera.position.plus(new Vec3(-this.keyboardMovementSpeed, 0, 0)))
-            this.cameraModel.setTargetPosition(this.camera.position.plus(new Vec3(-this.keyboardMovementSpeed, 0, 0)));
+            // this.cameraModel.setTargetPosition(this.camera.position.plus(new Vec3(-this.keyboardMovementSpeed, 0, 0)));
+
+            //to the left relative to current forward direction (no z-change tho)
+            let right_vector = new Vec3(this.camera.forward.y, -this.camera.forward.x, 0)
+            this.cameraModel.setTargetPosition(this.camera.position.minus(right_vector));
         }
         if (interaction.keysDownState['s']) {
             // this.camera.setPosition(this.camera.position.plus(new Vec3(0, -this.keyboardMovementSpeed, 0)))
-            this.cameraModel.setTargetPosition(this.camera.position.plus(new Vec3(0, -this.keyboardMovementSpeed, 0)));
+            // this.cameraModel.setTargetPosition(this.camera.position.plus(new Vec3(0, -this.keyboardMovementSpeed, 0)));
+
+            //backward in the direction the camera is facing
+            this.cameraModel.setTargetPosition(this.camera.position.minus(this.camera.forward));
         }
         if (interaction.keysDownState['d']) {
             // this.camera.setPosition(this.camera.position.plus(new Vec3(this.keyboardMovementSpeed, 0, 0)))
-            this.cameraModel.setTargetPosition(this.camera.position.plus(new Vec3(this.keyboardMovementSpeed, 0, 0)));
+            // this.cameraModel.setTargetPosition(this.camera.position.plus(new Vec3(this.keyboardMovementSpeed, 0, 0)));
+
+            //to the right relative to current forward direction (no z-change tho)
+            let right_vector = new Vec3(this.camera.forward.y, -this.camera.forward.x, 0)
+            this.cameraModel.setTargetPosition(this.camera.position.plus(right_vector));
         }
         if (interaction.keysDownState['ArrowUp']) {
             this.cameraModel.setTargetPosition(this.camera.position.plus(new Vec3(0, 0, this.keyboardMovementSpeed)));
