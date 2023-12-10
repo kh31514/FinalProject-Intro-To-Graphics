@@ -1,4 +1,4 @@
-import {BaseSceneController} from "../../HelperClasses";
+import { BaseSceneController } from "../../HelperClasses";
 import {
     BillboardParticleSystemModel, BillboardParticleSystemView,
     BotModel,
@@ -10,12 +10,12 @@ import {
     TerrainModel,
     TerrainView, TriangleMeshCharacterModel, TriangleMeshCharacterView
 } from "../Nodes";
-import {ExamplePlayerInteractionMode, ExamplePointerLockInteractionMode} from "../InteractionModes";
-import {AGLContext, ANodeModel, ANodeView, GetAppState, Quaternion} from "../../../anigraph";
-import {ExampleSceneModel} from "./ExampleSceneModel";
+import { ExamplePlayerInteractionMode, ExamplePointerLockInteractionMode } from "../InteractionModes";
+import { AGLContext, ANodeModel, ANodeView, GetAppState, Quaternion } from "../../../anigraph";
+import { ExampleSceneModel } from "./ExampleSceneModel";
 
-export class ExampleSceneController extends BaseSceneController{
-    get model():ExampleSceneModel{
+export class ExampleSceneController extends BaseSceneController {
+    get model(): ExampleSceneModel {
         return this._model as ExampleSceneModel;
     }
 
@@ -23,7 +23,7 @@ export class ExampleSceneController extends BaseSceneController{
      * So that interaction modes know how to access the model's player
      * @returns {CharacterModel}
      */
-    get player(){
+    get player() {
         return this.model.player;
     }
 
@@ -52,8 +52,8 @@ export class ExampleSceneController extends BaseSceneController{
      * @returns {Promise<void>}
      * @constructor
      */
-    async LoadShaderModel(shaderName:string, useVertexColors:boolean=true){
-        let appState=GetAppState();
+    async LoadShaderModel(shaderName: string, useVertexColors: boolean = true) {
+        let appState = GetAppState();
         /**
          * Now let's load a shader model, which we will use to create a custom shader material.
          * The argument to `loadShaderMaterialModel` is the name used in the shader folder and glsl files.
@@ -73,7 +73,7 @@ export class ExampleSceneController extends BaseSceneController{
          * This will turn vertex colors on by default for materials created with this model.
          * Each time you create a material, you can turn off vertex colors for that material if you want.
          */
-        if(useVertexColors) {
+        if (useVertexColors) {
             appState.getShaderMaterialModel(shaderName).usesVertexColors = true;
         }
     }
@@ -85,13 +85,13 @@ export class ExampleSceneController extends BaseSceneController{
         /**
          * This code adds the ExamplePlayer interaction mode and sets it as the current active mode
          */
-        let playerInteractionMode = new ExamplePlayerInteractionMode(this);
-        playerInteractionMode.cameraTarget = this.model.player;
-        this.defineInteractionMode("ExamplePlayer", playerInteractionMode);
+        // let playerInteractionMode = new ExamplePlayerInteractionMode(this);
+        // playerInteractionMode.cameraTarget = this.model.player;
+        // this.defineInteractionMode("ExamplePlayer", playerInteractionMode);
 
 
-        let pointerLockInteractionMode = new ExamplePointerLockInteractionMode(this);
-        this.defineInteractionMode("ExamplePointerLock", pointerLockInteractionMode);
+        // let pointerLockInteractionMode = new ExamplePointerLockInteractionMode(this);
+        // this.defineInteractionMode("ExamplePointerLock", pointerLockInteractionMode);
 
         /**
          * If we want to start out in debug interaction mode we have a convenience method for switching to it
@@ -105,7 +105,7 @@ export class ExampleSceneController extends BaseSceneController{
 
     }
 
-    loadSpaceSkymap(){
+    loadSpaceSkymap() {
         /**
          * Set up the skybox background
          */
@@ -132,7 +132,7 @@ export class ExampleSceneController extends BaseSceneController{
      * This is what gets called every time the browser grabs a new frame to render
      * @param context
      */
-    onAnimationFrameCallback(context:AGLContext) {
+    onAnimationFrameCallback(context: AGLContext) {
         /**
          * let's update the model...
          */

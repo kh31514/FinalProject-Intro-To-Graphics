@@ -43,14 +43,6 @@ export class TerrainModel extends ATerrainModel {
     textureWrapX: number = 5;
     textureWrapY: number = 5;
 
-    static initAppState(appState: AppState) {
-        appState.addSliderIfMissing(TerrainModel.AppStateKeys.c, 1, 0, 2, 0.1);
-    }
-
-    signalCustomUpdate() {
-        this.signalEvent(TerrainModel.AppStateKeys.c);
-    }
-
     /**
  * This is what you would use to add a listener to the custom update event
  * @param callback
@@ -75,11 +67,6 @@ export class TerrainModel extends ATerrainModel {
         if (textureWrapX !== undefined) { this.textureWrapX = textureWrapX; }
         if (textureWrapY !== undefined) { this.textureWrapY = textureWrapY; }
 
-        const self = this;
-        this.subscribeToAppState(TerrainModel.AppStateKeys.c, (c: number) => {
-            self.c = c;
-            this.signalEvent(TerrainModel.AppStateKeys.c);
-        })
     }
 
     getTerrainHeightAtPoint(p: Vec2) {
@@ -156,15 +143,25 @@ export class TerrainModel extends ATerrainModel {
         return dotProduct;
     }
 
+    clear() {
+        for (let y = 0; y < this.heightMap.height; y++) {
+            for (let x = 0; x < this.heightMap.width; x++) {
+                this.heightMap.setPixelNN(x, y, -10000);
+            }
+        }
+        this.heightMap.setTextureNeedsUpdate();
+    }
 
-    perlinTerrain() {
+
+
+    perlinTerrain(c: number) {
         for (let y = 0; y < this.heightMap.height; y++) {
             for (let x = 0; x < this.heightMap.width; x++) {
                 let noiseValue = this.perlinNoise(x * scale, y * scale);
                 let heightValue = Math.floor(amplitude * noiseValue);
                 const rolling = Math.sin(x * 0.1) * Math.cos(y * 0.1) * 5; // Adjust the rolling effect here
                 const rolledHeight = heightValue + rolling;
-                this.heightMap.setPixelNN(x, y, this.c * 0.05 * rolledHeight);
+                this.heightMap.setPixelNN(x, y, c * rolledHeight);
             }
         }
         this.heightMap.setTextureNeedsUpdate();
