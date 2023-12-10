@@ -10,8 +10,11 @@ import { ADataTextureFloat1D } from "../../../../anigraph/rendering/image";
 import * as THREE from "three";
 import { makeNoise2D } from "fast-simplex-noise";
 import { BlinnPhongMaterial } from "../../../../anigraph/rendering/shadermodels";
+// import Noise from 'noisejs';
 
-
+// Constants for terrain generation
+const scale = 0.1; // Scale factor for the noise (adjusts the frequency)
+const amplitude = 0.01; // Amplitude factor (adjusts the height range)
 
 @ASerializable("TerrainModel")
 export class TerrainModel extends ATerrainModel {
@@ -172,8 +175,13 @@ export class TerrainModel extends ATerrainModel {
                     this.heightMap.setPixelNN(x, y, Math.random() * 0.05 - .5);
                 }
                 else {
-                    this.heightMap.setPixelNN(x, y, Math.random() * 0.05);
+                    // this.heightMap.setPixelNN(x, y, Math.random() * 0.05);
                     //this.heightMap.setPixelNN(x, y, Math.sin(2 * x) * 0.2 + Math.sin(2 * y) * 0.2);
+                    let noiseValue = this.perlinNoise(x * scale, y * scale);
+                    let heightValue = Math.floor(amplitude * noiseValue);
+                    const rolling = Math.sin(x * 0.1) * Math.cos(y * 0.1) * 5; // Adjust the rolling effect here
+                    const rolledHeight = heightValue + rolling;
+                    this.heightMap.setPixelNN(x, y, 0.05 * rolledHeight);
                 }
 
             }
@@ -182,14 +190,53 @@ export class TerrainModel extends ATerrainModel {
         this.heightMap.setTextureNeedsUpdate();
     }
 
-    // TODO: method to let the player change the terrain
-    playerInteraction(x: number, y: number, change: number) {
-        for (let i = y - 5; i < y + 5; i++) {
-            for (let j = x - 5; j < x - 5; j++) {
-                // TODO make the edges less rigid
-                this.heightMap.setPixelNN(i, j, this.heightMap.pixelData.getPixelNN(x, y) + change);
+    perlinNoise(x: number, y: number): number {
+        // Generate a pseudo-random gradient vector at this grid point
+        const v = (x * 15485863 + y * 101 + 23571) & 0xff; // Replace with your own pseudo-random function
+
+        // Pre-calculated gradient vectors (you can define your own gradients)
+        const gradients = [
+            [1, 1],
+            [-1, 1],
+            [1, -1],
+            [-1, -1]
+        ];
+        // Calculate dot product between gradient and distance vectors
+        const dx = x - Math.floor(x);
+        const dy = y - Math.floor(y);
+        const gradientIndex = (x + y) & 3;
+        const [gradX, gradY] = gradients[gradientIndex];
+        const dotProduct = dx * gradX + dy * gradY;
+
+        return dotProduct;
+    }
+
+
+    perlinTerrain() {
+        for (let y = 0; y < this.heightMap.height; y++) {
+            for (let x = 0; x < this.heightMap.width; x++) {
+                let noiseValue = this.perlinNoise(x * scale, y * scale);
+                let heightValue = Math.floor(amplitude * noiseValue);
+                const rolling = Math.sin(x * 0.1) * Math.cos(y * 0.1) * 5; // Adjust the rolling effect here
+                const rolledHeight = heightValue + rolling;
+                this.heightMap.setPixelNN(x, y, 0.05 * rolledHeight);
             }
         }
+        this.heightMap.setTextureNeedsUpdate();
+    }
+
+    // TODO: fix this method
+    playerInteraction(x: number, y: number, change: number) {
+
+        //this.reRollRandomHeightMap(1)
+        for (let i = y - 5; i < y + 5; i++) {
+            for (let j = x - 5; j < x + 5; j++) {
+                // TODO make the edges less rigid
+                this.heightMap.setPixelNN(i, j, this.heightMap.pixelData.getPixelNN(x, y) + change);
+                //this.heightMap.setPixelNN(j, i, 10);
+            }
+        }
+        this.heightMap.setTextureNeedsUpdate();
     }
 
 
