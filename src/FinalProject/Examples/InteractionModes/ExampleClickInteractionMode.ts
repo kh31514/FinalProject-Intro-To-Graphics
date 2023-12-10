@@ -7,7 +7,7 @@ import {
     AKeyboardInteraction, ANodeModel3D, ASceneController,
     ASceneModel,
     ASerializable, AWheelInteraction, NodeTransform3D,
-    SetInteractionCallbacks, V2, V4
+    SetInteractionCallbacks, V2, V4, Vec3
 } from "../../../anigraph";
 import type { HasInteractionModeCallbacks } from "../../../anigraph";
 import { ASceneInteractionMode } from "../../../anigraph/starter";
@@ -17,12 +17,15 @@ import { ExampleSceneModel } from "../Apps/ExampleSceneModel";
 interface IsSceneModelWithRequirements extends ASceneModel {
     // Put any expected functions of supported scene models here
     onClick(event: AInteractionEvent): void;
+    onKeyDown(event: AInteractionEvent, interaction: AKeyboardInteraction): void;
     cursorModel: ANodeModel3D;
 }
 
 @ASerializable("ExampleClickInteractionMode")
 export class ExampleClickInteractionMode extends ASceneInteractionMode {
     static MODE_NAME = "Custom Mode"
+
+    keyboardMovementSpeed: number = 0.25;
 
     /**
      * Here we are simply defining our model getter to cast our scene model as one with the required interface implemented
@@ -77,7 +80,30 @@ export class ExampleClickInteractionMode extends ASceneInteractionMode {
         this.model.onClick(event);
     }
 
-    // onKeyDown(event:AInteractionEvent, interaction:AKeyboardInteraction){}
+    onKeyDown(event: AInteractionEvent, interaction: AKeyboardInteraction) {
+        if (interaction.keysDownState['w']) {
+            // this.camera.setPosition(this.camera.position.plus(new Vec3(0, this.keyboardMovementSpeed, 0)))
+            this.cameraModel.setTargetPosition(this.camera.position.plus(new Vec3(0, this.keyboardMovementSpeed, 0)));
+        }
+        if (interaction.keysDownState['a']) {
+            // this.camera.setPosition(this.camera.position.plus(new Vec3(-this.keyboardMovementSpeed, 0, 0)))
+            this.cameraModel.setTargetPosition(this.camera.position.plus(new Vec3(-this.keyboardMovementSpeed, 0, 0)));
+        }
+        if (interaction.keysDownState['s']) {
+            // this.camera.setPosition(this.camera.position.plus(new Vec3(0, -this.keyboardMovementSpeed, 0)))
+            this.cameraModel.setTargetPosition(this.camera.position.plus(new Vec3(0, -this.keyboardMovementSpeed, 0)));
+        }
+        if (interaction.keysDownState['d']) {
+            // this.camera.setPosition(this.camera.position.plus(new Vec3(this.keyboardMovementSpeed, 0, 0)))
+            this.cameraModel.setTargetPosition(this.camera.position.plus(new Vec3(this.keyboardMovementSpeed, 0, 0)));
+        }
+        if (interaction.keysDownState['ArrowUp']) {
+            this.cameraModel.setTargetPosition(this.camera.position.plus(new Vec3(0, 0, this.keyboardMovementSpeed)));
+        }
+        if (interaction.keysDownState['ArrowDown']) {
+            this.cameraModel.setTargetPosition(this.camera.position.plus(new Vec3(0, 0, -this.keyboardMovementSpeed)));
+        }
+    }
     // onKeyUp(event:AInteractionEvent, interaction:AKeyboardInteraction){}
     // onWheelMove(event:AInteractionEvent, interaction?:AWheelInteraction){}
     onMouseMove(event: AInteractionEvent, interaction?: ADOMPointerMoveInteraction) {

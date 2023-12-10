@@ -2,7 +2,8 @@ import {
     ACameraModel, AInteractionEvent,
     AppState, GetAppState, Quaternion, ATriangleMeshModel,
     NodeTransform3D, Particle3D,
-    V3, V4, Vec2, VertexArray3D
+    V3, V4, Vec2, VertexArray3D, Vec3
+
 } from "src/anigraph";
 import {
     BillboardParticleSystemModel, TerrainModel,
@@ -17,6 +18,14 @@ const SelectionOptions = [
 ]
 
 export class MainSceneModel extends ExampleSceneModel {
+    latency: number = 1;
+    delta_t: number = 0;
+
+    get dt() { return this.delta_t; }
+    setDt(t: number) {
+        this.delta_t = this.delta_t + t
+    }
+
     billboardParticles!: BillboardParticleSystemModel;
 
     initAppState(appState: AppState): void {
@@ -219,6 +228,22 @@ export class MainSceneModel extends ExampleSceneModel {
         if (args != undefined && args.length > 0) {
             t = args[0];
         }
+
+        let pc = this.camera.position
+        let pt = this.cameraModel.targetPosition
+        // this.setDt(0.01)
+        let pos = pc.plus((pt.minus(pc)).times(Math.min(1, t / this.latency)))
+        this.camera.setPosition(pos)
+
+        // if (this.dt == 1) {
+        //     this.setDt(0)
+        // }
+
+        /**
+         * If you want to update the react GUI components
+         */
+        // GetAppState().updateComponents();
+
     }
 
 
