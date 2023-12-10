@@ -14,7 +14,7 @@ export class ADataTextureFloat1D extends ADataTexture<PixelDataFloat1D>{
     setPixelNN(x: number, y: number, value: number) {
         // @ts-ignore
         this.pixelData.setPixelNN(x, y, [value]);
-        console.log("setting new pixel")
+        // console.log("setting new pixel")
     }
 
     static Create(width: number, height: number, dataArray?: Float32Array, ...args: any[]) {

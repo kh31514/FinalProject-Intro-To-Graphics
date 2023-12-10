@@ -89,8 +89,8 @@ export class MainSceneModel extends ExampleSceneModel {
 
 
     onClick(event: AInteractionEvent) {
-        console.log(event);
-        console.log(event.cursorPosition)
+        //console.log(event);
+        //console.log(event.cursorPosition)
         // TODO: transform pixel coordinates to terrain coordinates
 
         let ndcCursor = event.ndcCursor;
@@ -128,8 +128,15 @@ export class MainSceneModel extends ExampleSceneModel {
 
             if (t > 0) {
                 // find intersection with x and y
-                console.log(cameraWorld.x + t * ray.x)
-                console.log(cameraWorld.y + t * ray.y)
+                let x = cameraWorld.x + t * ray.x
+                let y = cameraWorld.y + t * ray.y
+                let z = cameraWorld.z + t * ray.z
+                console.log(x)
+                console.log(y)
+                console.log(z)
+                let terrainWorld = V4(x, y, z, 1)
+                let terrainCoords = this.terrain.transform.getMat4().invert().times(terrainWorld)
+                console.log(terrainCoords)
             }
         }
 
@@ -143,7 +150,7 @@ export class MainSceneModel extends ExampleSceneModel {
              * Get the world coordinates of the cursor
              */
             let cursorWorldCoordinates = this.getCoordinatesForCursorEvent(event);
-            console.log(cursorWorldCoordinates)
+            //console.log(cursorWorldCoordinates)
             // TODO figure out how to convert these to 3D world coordinates
 
             let trans = this.terrain.transform.getMat4()
