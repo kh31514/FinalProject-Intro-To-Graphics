@@ -175,7 +175,7 @@ export class TerrainModel extends ATerrainModel {
                     // raised terrain for the waterfall
                     this.heightMap.setPixelNN(x, y, Math.random() * 0.05 + waterfall_height);
                 }
-                else if (y > this.heightMap.height * 3 / 4 - 10) {
+                else if (y > this.heightMap.height * 3 / 4 - waterfall_width) {
                     // sloping part of waterfall
                     // calculate the height, then change slightly based on randomness
                     let slope = waterfall_height / waterfall_width
@@ -188,7 +188,11 @@ export class TerrainModel extends ATerrainModel {
                 }
                 else if (x > this.heightMap.width * 3.5 / 8 && x < this.heightMap.width * 4.5 / 8 && y < this.heightMap.height * 5 / 8) {
                     // todo: make the elevation a little more natural here, maybe based on squared diff from center
-                    this.heightMap.setPixelNN(x, y, Math.random() * 0.05 - .5);
+                    let center_dist = Math.abs(x - this.heightMap.width / 2)
+                    let stream_height = .5
+                    let stream_width = this.heightMap.width / 16
+                    let sigmoid_output = stream_height / (1 + Math.exp(-6 * (center_dist - stream_width / 2) / stream_width))
+                    this.heightMap.setPixelNN(x, y, Math.random() * 0.05 - .5 + sigmoid_output);
                 }
                 else {
                     let noiseValue = this.perlinNoise(x * scale, y * scale);
@@ -197,6 +201,19 @@ export class TerrainModel extends ATerrainModel {
                     const rolledHeight = heightValue + rolling;
                     this.heightMap.setPixelNN(x, y, c * rolledHeight);
                 }
+            }
+        }
+        this.heightMap.setTextureNeedsUpdate();
+    }
+
+    playerInteraction(x: number, y: number, change: number) {
+
+        //this.reRollRandomHeightMap(1)
+        for (let i = y - 5; i < y + 5; i++) {
+            for (let j = x - 5; j < x + 5; j++) {
+                // TODO make the edges less rigid
+                this.heightMap.setPixelNN(i, j, this.heightMap.pixelData.getPixelNN(x, y) + change);
+                //this.heightMap.setPixelNN(j, i, 10);
             }
         }
         this.heightMap.setTextureNeedsUpdate();
