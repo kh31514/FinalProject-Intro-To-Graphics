@@ -18,7 +18,6 @@ interface IsSceneModelWithRequirements extends ASceneModel {
     // Put any expected functions of supported scene models here
     onClick(event: AInteractionEvent): void;
     onKeyDown(event: AInteractionEvent, interaction: AKeyboardInteraction): void;
-
     cursorModel: ANodeModel3D;
 }
 
@@ -60,6 +59,9 @@ export class ExampleClickInteractionMode extends ASceneInteractionMode {
              * @type {Vec4}
              */
             let eyeCoordinates = this.camera.projection.getInverse().times(cursorCoordsH).getHomogenized();
+
+            // convert the point in eye coordinates to world coordinates
+            let worldCoordinates = this.camera.transform.times(eyeCoordinates)
 
             /**
              * Set the position of our cursor to this eye coordinates position

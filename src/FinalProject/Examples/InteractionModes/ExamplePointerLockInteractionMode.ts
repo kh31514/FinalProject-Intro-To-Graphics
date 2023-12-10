@@ -5,44 +5,44 @@ import {
     NodeTransform3D, Vec2,
     Vec3
 } from "../../../anigraph";
-import {AWheelInteraction} from "../../../anigraph/interaction/AWheelInteraction";
-import {MainAppPointerLockInteractionMode} from "../../HelperClasses/InteractionModes/MainAppPointerLockInteractionMode";
-import {BaseSceneController} from "../../HelperClasses";
+import { AWheelInteraction } from "../../../anigraph/interaction/AWheelInteraction";
+import { MainAppPointerLockInteractionMode } from "../../HelperClasses/InteractionModes/MainAppPointerLockInteractionMode";
+import { BaseSceneController } from "../../HelperClasses";
 
-enum ExamplePointerLockControlPanelParams{
-    PlayerSpeed="PlayerSpeed"
+enum ExamplePointerLockControlPanelParams {
+    PlayerSpeed = "PlayerSpeed"
 }
 
-export class ExamplePointerLockInteractionMode extends MainAppPointerLockInteractionMode{
+export class ExamplePointerLockInteractionMode extends MainAppPointerLockInteractionMode {
     /**
      * You may want to define some parameters to adjust the speed of controls...
      */
-    mouseMovementSpeed:number=0.1;
+    mouseMovementSpeed: number = 0.1;
 
-    get camera(){
+    get camera() {
         return this.model.camera;
     }
 
-    constructor(owner?:BaseSceneController,
-                name?:string,
-                interactionCallbacks?:HasInteractionModeCallbacks,
-                ...args:any[]) {
+    constructor(owner?: BaseSceneController,
+        name?: string,
+        interactionCallbacks?: HasInteractionModeCallbacks,
+        ...args: any[]) {
         super(name, owner, interactionCallbacks, ...args);
         // this.reset();
         let appState = GetAppState();
         /**
          * First argument is just a string we defined in the enum above to avoid type-based bugs...
          */
-        if(appState.getState(ExamplePointerLockControlPanelParams.PlayerSpeed)===undefined) {
-            appState.addSliderControl(ExamplePointerLockControlPanelParams.PlayerSpeed, 0.1, 0, 1, 0.01);
-        }
+        // if(appState.getState(ExamplePointerLockControlPanelParams.PlayerSpeed)===undefined) {
+        //     appState.addSliderControl(ExamplePointerLockControlPanelParams.PlayerSpeed, 0.1, 0, 1, 0.01);
+        // }
     }
 
-    get player(){
+    get player() {
         return this.owner.player;
     }
 
-    reset(){
+    reset() {
         // You can reset the control mode here
         this.camera.pose = NodeTransform3D.LookAt(
             this.player.position.plus(Vec3.UnitZ().times(3)),
@@ -55,7 +55,7 @@ export class ExamplePointerLockInteractionMode extends MainAppPointerLockInterac
      * This gets called immediately before the interaction mode is activated. For now, we will call reset()
      * @param args
      */
-    beforeActivate(...args:any[]) {
+    beforeActivate(...args: any[]) {
         super.beforeActivate(...args);
         this.reset();
     }
@@ -82,23 +82,23 @@ export class ExamplePointerLockInteractionMode extends MainAppPointerLockInterac
      * @param event
      * @param interaction
      */
-    onKeyDown(event:AInteractionEvent, interaction:AKeyboardInteraction){
+    onKeyDown(event: AInteractionEvent, interaction: AKeyboardInteraction) {
         // e.g., define this.player.onKeyDown(event, interaction)
 
     }
 
-    onKeyUp(event:AInteractionEvent, interaction:AKeyboardInteraction){
-        if(!interaction.keysDownState['w']){
+    onKeyUp(event: AInteractionEvent, interaction: AKeyboardInteraction) {
+        if (!interaction.keysDownState['w']) {
         }
-        if(!interaction.keysDownState['a']){
+        if (!interaction.keysDownState['a']) {
         }
-        if(!interaction.keysDownState['s']){
+        if (!interaction.keysDownState['s']) {
         }
-        if(!interaction.keysDownState['d']){
+        if (!interaction.keysDownState['d']) {
         }
-        if(!interaction.keysDownState['r']){
+        if (!interaction.keysDownState['r']) {
         }
-        if(!interaction.keysDownState['f']){
+        if (!interaction.keysDownState['f']) {
         }
     }
 
@@ -109,21 +109,21 @@ export class ExamplePointerLockInteractionMode extends MainAppPointerLockInterac
         interaction.setInteractionState('lastCursor', event.ndcCursor);
     }
     onDragMove(event: AInteractionEvent, interaction: ADragInteraction): void {
-        if(!event.ndcCursor){
+        if (!event.ndcCursor) {
             return;
         }
         let mouseMovement = event.ndcCursor.minus(interaction.getInteractionState('lastCursor'));
         interaction.setInteractionState('lastCursor', event.ndcCursor);
     }
     onDragEnd(event: AInteractionEvent, interaction: ADragInteraction): void {
-        let cursorWorldCoordinates:Vec2|null = event.ndcCursor;
-        let dragStartWorldCoordinates:Vec2|null = interaction.dragStartEvent.ndcCursor;
+        let cursorWorldCoordinates: Vec2 | null = event.ndcCursor;
+        let dragStartWorldCoordinates: Vec2 | null = interaction.dragStartEvent.ndcCursor;
     }
 
 
-    onMouseMove(event:AInteractionEvent, interaction:ADOMPointerMoveInteraction ) {
+    onMouseMove(event: AInteractionEvent, interaction: ADOMPointerMoveInteraction) {
         // console.log(event);
-        if ( this.isLocked === false ) return;
+        if (this.isLocked === false) return;
 
         let webEvent = (event.DOMEvent as MouseEvent);
         // @ts-ignore
@@ -140,8 +140,8 @@ export class ExamplePointerLockInteractionMode extends MainAppPointerLockInterac
                 .plus(
                     Vec3.UnitY().times(-movementY)
                 ).times(
-                0.05*appState.getState(ExamplePointerLockControlPanelParams.PlayerSpeed)
-            )
+                    0.05 * appState.getState(ExamplePointerLockControlPanelParams.PlayerSpeed)
+                )
         this.player.position = this.player.position.plus(motionVector);
         this.camera.transform.position = this.camera.transform.position.plus(motionVector);
     }
@@ -153,7 +153,7 @@ export class ExamplePointerLockInteractionMode extends MainAppPointerLockInterac
      * @param t
      * @param args
      */
-    timeUpdate(t: number, ...args:any[]) {
+    timeUpdate(t: number, ...args: any[]) {
     }
 
 
