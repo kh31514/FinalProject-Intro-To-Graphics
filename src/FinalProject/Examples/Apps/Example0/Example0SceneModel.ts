@@ -13,7 +13,9 @@ import {
     Vec2, VertexArray3D
 } from "../../../../anigraph";
 import {ExampleSceneModel} from "../ExampleSceneModel";
-import {BillboardParticleSystemModel, ExampleParticleSystemModel} from "../../Nodes";
+import {ExampleParticleSystemModel} from "../../Nodes/";
+import {BillboardParticleSystemModel} from "../../../Main/Nodes/BillboardParticleSystem";
+
 import {UpdateGUIJSX, UpdateGUIWithBots} from "../../GUIHelpers";
 import {ABlinnPhongShaderModel} from "../../../../anigraph/rendering/shadermodels";
 import {CharacterModel, CharacterShaderModel} from "../../../HelperClasses";

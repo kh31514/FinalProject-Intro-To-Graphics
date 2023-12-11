@@ -1,6 +1,5 @@
 import { BaseSceneController } from "../../HelperClasses";
 import {
-    BillboardParticleSystemModel, BillboardParticleSystemView,
     BotModel,
     BotView, ExampleLoadedCharacterModel, ExampleLoadedView, ExampleParticleSystemModel, ExampleParticleSystemView,
     ExampleThreeJSNodeModel,
@@ -10,6 +9,10 @@ import {
     TerrainModel,
     TerrainView, TriangleMeshCharacterModel, TriangleMeshCharacterView
 } from "../Nodes";
+
+import {
+    BillboardParticleSystemModel, BillboardParticleSystemView
+} from "../../Main/Nodes/BillboardParticleSystem";
 import { ExamplePlayerInteractionMode, ExamplePointerLockInteractionMode } from "../InteractionModes";
 import { AGLContext, ANodeModel, ANodeView, GetAppState, Quaternion } from "../../../anigraph";
 import { ExampleSceneModel } from "./ExampleSceneModel";
@@ -85,13 +88,13 @@ export class ExampleSceneController extends BaseSceneController {
         /**
          * This code adds the ExamplePlayer interaction mode and sets it as the current active mode
          */
-        let playerInteractionMode = new ExamplePlayerInteractionMode(this);
-        playerInteractionMode.cameraTarget = this.model.player;
-        this.defineInteractionMode("ExamplePlayer", playerInteractionMode);
+        // let playerInteractionMode = new ExamplePlayerInteractionMode(this);
+        // playerInteractionMode.cameraTarget = this.model.player;
+        // this.defineInteractionMode("ExamplePlayer", playerInteractionMode);
 
 
-        let pointerLockInteractionMode = new ExamplePointerLockInteractionMode(this);
-        this.defineInteractionMode("ExamplePointerLock", pointerLockInteractionMode);
+        // let pointerLockInteractionMode = new ExamplePointerLockInteractionMode(this);
+        // this.defineInteractionMode("ExamplePointerLock", pointerLockInteractionMode);
 
         /**
          * If we want to start out in debug interaction mode we have a convenience method for switching to it

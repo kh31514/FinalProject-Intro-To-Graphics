@@ -27,7 +27,7 @@ export class Example1SceneModel extends ExampleSceneModel {
          * ```
          */
         ABlinnPhongShaderModel.AddAppState();
-        // BillboardParticleSystemModel.AddParticleSystemControls();
+        // ParticleSystemModel.AddParticleSystemControls();
 
     }
 

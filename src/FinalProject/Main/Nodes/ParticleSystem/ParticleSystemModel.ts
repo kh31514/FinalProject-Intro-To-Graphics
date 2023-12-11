@@ -7,16 +7,18 @@ import {
     Color,
     GetAppState,
     V3,
-    Vec3
+    V4,
+    Vec3,
+    Mat3, Mat4, ACamera
 } from "../../../../anigraph";
-import {BillboardParticle} from "./BillboardParticle";
+import {Particle} from "./Particle";
 import {AInstancedParticleSystemModel} from "../../../../anigraph/effects";
 
 
 // let appState = GetAppState();
 
-@ASerializable("BillboardParticleSystemModel")
-export class BillboardParticleSystemModel extends AInstancedParticleSystemModel<BillboardParticle>{
+@ASerializable("ParticleSystemModel")
+export class ParticleSystemModel extends AInstancedParticleSystemModel<Particle>{
 
     static DEFAULT_MAX_PARTICLES = 300;
     static VelocitySliderName:string="Velocity"
@@ -59,7 +61,7 @@ export class BillboardParticleSystemModel extends AInstancedParticleSystemModel<
         this.particles[i].size = radius??0.1;
         this.particles[i].visible=true;
         this.particles[i].t0=t0;
-        this.particles[i].color = Color.Random();
+        this.particles[i].color = new Color(1.9,2.0,2.1);
         this.lastEmittedIndex=i;
     }
 
@@ -69,7 +71,7 @@ export class BillboardParticleSystemModel extends AInstancedParticleSystemModel<
      */
     initParticles(nParticles:number){
         for(let i=0;i<nParticles;i++){
-            let newp = new BillboardParticle();
+            let newp = new Particle();
 
             /**
              * Here we will initialize the particles to be invisible.
@@ -93,11 +95,11 @@ export class BillboardParticleSystemModel extends AInstancedParticleSystemModel<
 
     constructor(nParticles?:number, ...args:any[]) {
         super(nParticles);
-        this.initParticles(nParticles??BillboardParticleSystemModel.DEFAULT_MAX_PARTICLES);
+        this.initParticles(nParticles??ParticleSystemModel.DEFAULT_MAX_PARTICLES);
         this.signalParticlesUpdated();
     }
 
-    timeUpdate(t: number, ...args:any[]) {
+    timeUpdate(t: number, camera: ACamera, type:string,...args:any[]) {
         let appState = GetAppState();
         super.timeUpdate(t, ...args);
 
@@ -115,11 +117,30 @@ export class BillboardParticleSystemModel extends AInstancedParticleSystemModel<
         /**
          * Let's emit a new particle
          */
-        let particleSize = 0.05;
-        let startPosition = this.getWorldTransform().c3.Point3D;
-        let startSpeed = appState.getState(BillboardParticleSystemModel.ForceStrengthSliderName)??0.5;
-        let startVelocity = V3(Math.cos(t*5), Math.sin(t*5), 1.0).times(startSpeed);
-        let newParticleMass = appState.getState(BillboardParticleSystemModel.ParticleMassSliderName)??1;
+        let particleSize = 1.0;
+
+        // let startPosition = this.getWorldTransform().c3.Point3D;
+        // y 3 4
+        // x -0.5 0.5
+        let rand_x = (Math.random() - 0.5) / 3;
+        let startPosition = V3(rand_x,1.0,-0.05);
+
+
+
+        // steam...?
+        // let startSpeed = appState.getState(ParticleSystemModel.ForceStrengthSliderName)??0.5;
+        // let startVelocity = V3(Math.cos(t*5), Math.sin(t*5), 1.0).times(startSpeed);
+        /////////////
+
+        // water parabola
+        let startSpeed = appState.getState(ParticleSystemModel.ForceStrengthSliderName) ?? 0.5;
+        let startVelocity = V3(0.0, -7.5, 0.0).times(startSpeed);
+
+
+        //
+
+
+        let newParticleMass = appState.getState(ParticleSystemModel.ParticleMassSliderName)??1;
         this.emit(startPosition,
             startVelocity,
             newParticleMass,
@@ -132,11 +153,16 @@ export class BillboardParticleSystemModel extends AInstancedParticleSystemModel<
          */
         for(let i=0;i<this.particles.length;i++){
             let p =this.particles[i];
+
             p.position=p.position.plus(
                 p.velocity.times(
-                    (appState.getState(BillboardParticleSystemModel.VelocitySliderName)??0.5)*timePassed
+                    (appState.getState(ParticleSystemModel.VelocitySliderName)??0.5)*timePassed
                 )
             );
+
+            p.color.r -= 0.01;
+            p.color.g -= 0.01;
+            p.color.b -= 0.01;
         }
 
         /**
