@@ -122,7 +122,7 @@ export class MainSceneModel extends ExampleSceneModel {
         return this.waterSurfaceParticles
     }
 
-    addExampleBilboardParticleSystem3(nParticles: number = 200) {
+    addExampleBilboardParticleSystem3(nParticles: number = 45) {
         this.addChild(this.CreateBilboardParticleSystem3(nParticles))
     }
 
