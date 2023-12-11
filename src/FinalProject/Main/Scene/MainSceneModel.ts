@@ -357,21 +357,28 @@ export class MainSceneModel extends ExampleSceneModel {
             this.billboardMistParticles2.timeUpdate(t, this.camera, "mist2");
         } */
 
-        let dt = t - this.last_t
 
-        //position
-        let pc = this.camera.position
-        let pt = this.cameraModel.targetPosition
-        let pos = pc.plus((pt.minus(pc)).times(Math.min(1, dt / this.latency)))
-        this.camera.setPosition(pos)
 
-        //rotation
-        let qc = this.camera.transform.rotation
-        let qt = this.cameraModel.targetRotation
-        let rot = Quaternion.Slerp(qc, qt, Math.min(1, dt / this.latency))
-        this.camera.transform.rotation = rot
+        let mode = GetAppState().mainSceneController.interactionMode.name
+        console.log(mode)
+        if (mode == "ExampleClickInteractionMode") {
+            let dt = t - this.last_t
 
-        this.last_t = t
+            //position
+            let pc = this.camera.position
+            let pt = this.cameraModel.targetPosition
+            let pos = pc.plus((pt.minus(pc)).times(Math.min(1, dt / this.latency)))
+            this.camera.setPosition(pos)
+
+            //rotation
+            let qc = this.camera.transform.rotation
+            let qt = this.cameraModel.targetRotation
+            let rot = Quaternion.Slerp(qc, qt, Math.min(1, dt / this.latency))
+            this.camera.transform.rotation = rot
+
+            this.last_t = t
+        }
+
 
         /**
          * If you want to update the react GUI components

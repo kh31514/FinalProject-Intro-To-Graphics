@@ -15,7 +15,7 @@ import { GetAppState } from "../../appstate";
 export class ACameraModel extends ANodeModel3D {
     protected _camera!: ACamera;
     targetPosition: Vec3;
-    targetRotation: Quaternion = Quaternion.FromWXYZ([1, 1, 1, 1]);
+    targetRotation: Quaternion;
     get camera() {
         return this._camera;
     }
@@ -57,7 +57,8 @@ export class ACameraModel extends ANodeModel3D {
         }
         const self = this;
         this._setCameraListeners();
-        this.targetPosition = new Vec3(0, 0, 0)
+        this.targetPosition = new Vec3(0, -1, 1)
+        this.targetRotation = Quaternion.FromCameraOrientationVectors(this.camera.forward, this.camera.up)
     }
 
     get transform() {
