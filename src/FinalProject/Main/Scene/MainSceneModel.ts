@@ -22,6 +22,12 @@ const SelectionOptions = [
     "Lab Cat Land"
 ]
 
+const SkySelectionOptions = [
+    "Daytime",
+    "Space",
+    "Park"
+]
+
 let startTime = 0;
 
 export class MainSceneModel extends ExampleSceneModel {
@@ -52,6 +58,12 @@ export class MainSceneModel extends ExampleSceneModel {
             "Terrain",
             "default",
             SelectionOptions
+        )
+
+        appState.setSelectionControl(
+            "Sky",
+            "default",
+            SkySelectionOptions
         )
     }
 
