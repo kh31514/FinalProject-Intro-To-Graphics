@@ -14,6 +14,7 @@ import {
 } from "src/FinalProject/Examples/Nodes";
 import { ExampleSceneModel } from "src/FinalProject/Examples/Apps/ExampleSceneModel";
 import { ABlinnPhongShaderModel } from "src/anigraph/rendering/shadermodels";
+import { ATerrainShaderModel } from "src/anigraph/rendering/shadermodels";
 
 const SelectionOptions = [
     "Rocky Terrain",
@@ -44,6 +45,8 @@ export class MainSceneModel extends ExampleSceneModel {
 
     initAppState(appState: AppState): void {
         // TerrainModel.initAppState(appState);
+        ABlinnPhongShaderModel.AddAppState();
+        ATerrainShaderModel.AddAppState();
         // Dropdown menus with options are a bit more annoying but also doable...
         appState.setSelectionControl(
             "Terrain",
@@ -73,6 +76,7 @@ export class MainSceneModel extends ExampleSceneModel {
         await this.LoadCursorTexture();
         await appState.loadShaderMaterialModel("simpletexture");
         await appState.addShaderMaterialModel("blinnphong", ABlinnPhongShaderModel);
+        await appState.addShaderMaterialModel("terrain", ATerrainShaderModel);
 
         await this.loadTexture("./images/terrain/rock.jpg", "rock");
         await this.loadTexture("./images/waterfallParticle.png", "waterfallParticle");
@@ -148,6 +152,7 @@ export class MainSceneModel extends ExampleSceneModel {
 
 
         this.initTerrain("rock");
+        // ATerrainShaderModel.attachMaterialUniformsToAppState(this.terrain.material)
         this.terrain.perlinTerrain(0.08);
 
         let appState = GetAppState();

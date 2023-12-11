@@ -117,13 +117,13 @@ export class ParticleSystemModel extends AInstancedParticleSystemModel<Particle>
         /**
          * Let's emit a new particle
          */
-        let particleSize = 1.4;
+        let particleSize = 1.0;
 
         // let startPosition = this.getWorldTransform().c3.Point3D;
         // y 3 4
         // x -0.5 0.5
-        let rand_x = Math.random() - 0.5;
-        let startPosition = V3(rand_x,1.0,0.0);
+        let rand_x = (Math.random() - 0.5) / 3;
+        let startPosition = V3(rand_x,1.0,-0.05);
 
 
 
