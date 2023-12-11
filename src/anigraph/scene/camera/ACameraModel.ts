@@ -6,7 +6,7 @@
  */
 import * as THREE from "three";
 import { AObject, ASerializable } from "../../base";
-import { Mat4, Vec3 } from "../../math/linalg";
+import { Mat4, Vec3, Quaternion } from "../../math/linalg";
 import { ANodeModel3D } from "../nodeModel";
 import { ACamera, TransformationInterface } from "../../math";
 import { GetAppState } from "../../appstate";
@@ -15,6 +15,7 @@ import { GetAppState } from "../../appstate";
 export class ACameraModel extends ANodeModel3D {
     protected _camera!: ACamera;
     targetPosition: Vec3;
+    targetRotation: Quaternion = Quaternion.FromWXYZ([1, 1, 1, 1]);
     get camera() {
         return this._camera;
     }
@@ -23,6 +24,7 @@ export class ACameraModel extends ANodeModel3D {
     }
     get pose() { return this.camera.pose; }
     get tPos() { return this.targetPosition; }
+    get tRot() { return this.targetRotation; }
     get projection() { return this.camera.projection; }
     setPose(pose: TransformationInterface) {
         // this.camera.pose=pose.getMat4();
@@ -35,6 +37,10 @@ export class ACameraModel extends ANodeModel3D {
 
     setTargetPosition(pos: Vec3) {
         this.targetPosition = pos;
+    }
+
+    setTargetRotation(rot: Quaternion) {
+        this.targetRotation = rot;
     }
 
     setProjection(m: Mat4) {

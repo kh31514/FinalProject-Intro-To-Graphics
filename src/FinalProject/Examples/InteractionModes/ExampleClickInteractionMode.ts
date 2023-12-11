@@ -7,7 +7,7 @@ import {
     AKeyboardInteraction, ANodeModel3D, ASceneController,
     ASceneModel,
     ASerializable, AWheelInteraction, NodeTransform3D,
-    SetInteractionCallbacks, V2, V4, Vec3
+    SetInteractionCallbacks, V2, V4, Vec3, Mat4, Quaternion
 } from "../../../anigraph";
 import type { HasInteractionModeCallbacks } from "../../../anigraph";
 import { ASceneInteractionMode } from "../../../anigraph/starter";
@@ -27,7 +27,7 @@ export class ExampleClickInteractionMode extends ASceneInteractionMode {
     static MODE_NAME = "Custom Mode"
 
     keyboardMovementSpeed: number = 1;
-    keyboardRotationAngle: number = 0.05;
+    keyboardRotationAngle: number = 0.5;
 
     /**
      * Here we are simply defining our model getter to cast our scene model as one with the required interface implemented
@@ -82,7 +82,7 @@ export class ExampleClickInteractionMode extends ASceneInteractionMode {
     onKeyDown(event: AInteractionEvent, interaction: AKeyboardInteraction) {
         if (interaction.keysDownState['w']) {
             // this.camera.setPosition(this.camera.position.plus(new Vec3(0, this.keyboardMovementSpeed, 0)))
-            this.cameraModel.setTargetPosition(this.camera.position.plus(new Vec3(0, this.keyboardMovementSpeed, 0)));
+            // this.cameraModel.setTargetPosition(this.camera.position.plus(new Vec3(0, this.keyboardMovementSpeed, 0)));
 
             //forward in the direction the camera is facing
             this.cameraModel.setTargetPosition(this.camera.position.plus(this.camera.forward));
@@ -112,9 +112,26 @@ export class ExampleClickInteractionMode extends ASceneInteractionMode {
         }
         if (interaction.keysDownState['ArrowUp']) {
             this.cameraModel.setTargetPosition(this.camera.position.plus(new Vec3(0, 0, this.keyboardMovementSpeed)));
+            // let rad = -this.keyboardRotationAngle
+            // let M = new Mat4(1, 0, 0, 0, 0, Math.cos(rad), -Math.sin(rad), 0, 0, Math.sin(rad), Math.cos(rad), 0, 0, 0, 0, 1)
+            // // let M = new Mat4(Math.cos(rad), 0, Math.sin(rad), 0, 0, 1, 0, 0, -Math.sin(rad), 0, Math.cos(rad), 0, 0, 0, 0, 1)
+            // // this.camera.transform.rotation = this.camera.transform.rotation.times(M)
+            // this.camera.transform.rotation = Quaternion.FromCameraOrientationVectors(this.camera.forward, this.camera.up)
         }
         if (interaction.keysDownState['ArrowDown']) {
             this.cameraModel.setTargetPosition(this.camera.position.plus(new Vec3(0, 0, -this.keyboardMovementSpeed)));
+        }
+        if (interaction.keysDownState['ArrowLeft']) {
+            let rad = this.keyboardRotationAngle
+            let M = new Mat4(Math.cos(rad), -Math.sin(rad), 0, 0, Math.sin(rad), Math.cos(rad), 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)
+            // this.camera.transform.rotation = this.camera.transform.rotation.times(M)
+            this.cameraModel.setTargetRotation(this.camera.transform.rotation.times(M))
+        }
+        if (interaction.keysDownState['ArrowRight']) {
+            let rad = -this.keyboardRotationAngle
+            let M = new Mat4(Math.cos(rad), -Math.sin(rad), 0, 0, Math.sin(rad), Math.cos(rad), 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)
+            // this.camera.transform.rotation = this.camera.transform.rotation.times(M)
+            this.cameraModel.setTargetRotation(this.camera.transform.rotation.times(M))
         }
     }
     // onKeyUp(event:AInteractionEvent, interaction:AKeyboardInteraction){}

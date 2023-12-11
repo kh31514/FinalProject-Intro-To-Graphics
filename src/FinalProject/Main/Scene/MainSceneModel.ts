@@ -11,14 +11,7 @@ import { ExampleSceneModel } from "src/FinalProject/Examples/Apps/ExampleSceneMo
 import { ABlinnPhongShaderModel } from "src/anigraph/rendering/shadermodels";
 export class MainSceneModel extends ExampleSceneModel {
     latency: number = 1;
-    delta_t: number = 0;
     last_t: number = 0;
-
-    get dt() { return this.delta_t; }
-    setDt(t: number) {
-        this.delta_t = t
-    }
-
     billboardParticles!: BillboardParticleSystemModel;
 
     /**
@@ -154,19 +147,22 @@ export class MainSceneModel extends ExampleSceneModel {
         if (args != undefined && args.length > 0) {
             t = args[0];
         }
-        let pc = this.camera.position
-        let pt = this.cameraModel.targetPosition
-        this.setDt(this.delta_t + 0.1)
 
         let dt = t - this.last_t
 
+        //position
+        let pc = this.camera.position
+        let pt = this.cameraModel.targetPosition
         let pos = pc.plus((pt.minus(pc)).times(Math.min(1, dt / this.latency)))
         this.camera.setPosition(pos)
 
+        //rotation
+        let qc = this.camera.transform.rotation
+        let qt = this.cameraModel.targetRotation
+        let rot = Quaternion.Slerp(qc, qt, Math.min(1, dt / this.latency))
+        this.camera.transform.rotation = rot
+
         this.last_t = t
-        // if (this.dt == 1) {
-        //     this.setDt(0)
-        // }
 
         /**
          * If you want to update the react GUI components
