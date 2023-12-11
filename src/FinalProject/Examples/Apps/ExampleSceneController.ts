@@ -9,6 +9,7 @@ import {
     TerrainModel,
     TerrainView, TriangleMeshCharacterModel, TriangleMeshCharacterView
 } from "../Nodes";
+
 import {
     BillboardParticleSystemModel, BillboardParticleSystemView
 } from "../../Main/Nodes/BillboardParticleSystem";
@@ -103,7 +104,7 @@ export class ExampleSceneController extends BaseSceneController {
         /**
          * if we want to switch to one of the others we can do that like this
          */
-        // this.setCurrentInteractionMode("ExamplePlayer");
+        this.setCurrentInteractionMode("ExamplePlayer");
 
     }
 

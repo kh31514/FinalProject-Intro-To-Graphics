@@ -40,12 +40,8 @@ export class MainSceneModel extends ExampleSceneModel {
 
 
     latency: number = 1;
-    delta_t: number = 0;
-
-    get dt() { return this.delta_t; }
-    setDt(t: number) {
-        this.delta_t = this.delta_t + t
-    }
+    last_t: number = 0;
+    billboardParticles!: BillboardParticleSystemModel;
 
 
 
@@ -361,16 +357,21 @@ export class MainSceneModel extends ExampleSceneModel {
             this.billboardMistParticles2.timeUpdate(t, this.camera, "mist2");
         } */
 
-        // this zooms a bit too far rn
-        // let pc = this.camera.position
-        // let pt = this.cameraModel.targetPosition
-        // this.setDt(0.01)
-        // let pos = pc.plus((pt.minus(pc)).times(Math.min(1, t / this.latency)))
-        // this.camera.setPosition(pos)
+        let dt = t - this.last_t
 
-        // if (this.dt == 1) {
-        //     this.setDt(0)
-        // }
+        //position
+        let pc = this.camera.position
+        let pt = this.cameraModel.targetPosition
+        let pos = pc.plus((pt.minus(pc)).times(Math.min(1, dt / this.latency)))
+        this.camera.setPosition(pos)
+
+        //rotation
+        let qc = this.camera.transform.rotation
+        let qt = this.cameraModel.targetRotation
+        let rot = Quaternion.Slerp(qc, qt, Math.min(1, dt / this.latency))
+        this.camera.transform.rotation = rot
+
+        this.last_t = t
 
         /**
          * If you want to update the react GUI components
