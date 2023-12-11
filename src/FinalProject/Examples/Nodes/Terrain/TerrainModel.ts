@@ -211,8 +211,9 @@ export class TerrainModel extends ATerrainModel {
         //this.reRollRandomHeightMap(1)
         for (let i = y - 5; i < y + 5; i++) {
             for (let j = x - 5; j < x + 5; j++) {
-                // TODO make the edges less rigid
-                this.heightMap.setPixelNN(i, j, this.heightMap.pixelData.getPixelNN(x, y) + change);
+                let center_dist = Math.sqrt(Math.abs(y - i) ** 2 + Math.abs(x - j) ** 2)
+                let sigmoid_output = change / (1 + Math.exp(-center_dist + 3))
+                this.heightMap.setPixelNN(j, i, this.heightMap.pixelData.getPixelNN(j, i) + change - sigmoid_output);
                 //this.heightMap.setPixelNN(j, i, 10);
             }
         }

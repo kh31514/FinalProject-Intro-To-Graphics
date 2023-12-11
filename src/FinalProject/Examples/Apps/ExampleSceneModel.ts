@@ -197,6 +197,7 @@ export abstract class ExampleSceneModel extends BaseSceneModel {
 
 
     initCursorModel() {
+        console.log("initializing cursor model")
         let appState = GetAppState();
         this.cursorModel = new ATriangleMeshModel();
         let verts = this.createTexturedSquareVerts();
