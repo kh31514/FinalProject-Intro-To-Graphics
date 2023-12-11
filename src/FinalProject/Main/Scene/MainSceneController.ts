@@ -37,15 +37,15 @@ export class MainSceneController extends ExampleSceneController {
 
     async initScene(): Promise<void> {
         await super.initScene()
-        // this.initSkyBoxCubeMap();
-        this.setClearColor(Color.Black());
+        this.initSkyBoxCubeMap();
+        // this.setClearColor(Color.FromString("#F0FFFF"));
     }
 
     initInteractions() {
         super.initInteractions();
         this.initExampleInteractions();
-        // this.defineInteractionMode("ExampleClick", ExampleClickInteractionMode.Create(this));
-        // this.setCurrentInteractionMode("ExampleClick")
+        this.defineInteractionMode("ExampleClick", ExampleClickInteractionMode.Create(this));
+        this.setCurrentInteractionMode("ExampleClick")
     }
 
 }

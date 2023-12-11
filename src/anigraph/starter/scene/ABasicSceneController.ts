@@ -78,7 +78,8 @@ export abstract class ABasicSceneController extends ASceneController {
     initSkyBoxCubeMap(uls?:string[], transform?:Quaternion, ...args:any[]):void;
     initSkyBoxCubeMap(...args:any[]){
         let urls=[];
-        let DefaultPath = './images/cube/MilkyWay/dark-s_';
+        // let DefaultPath = './images/cube/MilkyWay/dark-s_';
+        let DefaultPath = './images/cube/skyboxsun25deg/';
         let DefaultFormat = '.jpg';
         let transform:Quaternion|undefined;
         let urlDict = {

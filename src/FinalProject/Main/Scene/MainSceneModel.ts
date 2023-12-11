@@ -2,7 +2,7 @@ import {
     ACameraModel, AInteractionEvent,
     AppState, GetAppState, Quaternion, ATriangleMeshModel,
     NodeTransform3D, Particle3D,
-    V3, V4, Vec2, VertexArray3D, Vec3
+    V3, V4, Vec2, VertexArray3D, Vec3, APointLightModel, Color
 
 } from "src/anigraph";
 
@@ -29,7 +29,7 @@ export class MainSceneModel extends ExampleSceneModel {
     billboardMistParticles2!: BillboardParticleSystemModel;
     waterSurfaceParticles!: ParticleSystemModel;
 
-
+    backgroundLight!:APointLightModel;
 
 
     latency: number = 1;
@@ -141,7 +141,10 @@ export class MainSceneModel extends ExampleSceneModel {
     }
 
     initScene() {
+        //lighting
         this.addViewLight();
+
+
         this.initTerrain("rock");
         this.terrain.perlinTerrain(0.08);
 
@@ -292,7 +295,7 @@ export class MainSceneModel extends ExampleSceneModel {
                 ).times(appState.globalScale),
                 Quaternion.RotationY(-Math.PI * 0.5).times(Quaternion.RotationX(-Math.PI * 0.25))
             )
-    
+
         )
         this.addChild(newModel); */
     }
@@ -325,7 +328,7 @@ export class MainSceneModel extends ExampleSceneModel {
             this.billboardMistParticles2.timeUpdate(t, this.camera, "mist2");
         }
 
-
+        // this zooms a bit too far rn
         // let pc = this.camera.position
         // let pt = this.cameraModel.targetPosition
         // this.setDt(0.01)
