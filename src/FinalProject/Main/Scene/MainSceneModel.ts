@@ -92,7 +92,7 @@ export class MainSceneModel extends ExampleSceneModel {
         return this.billboardWaterfallParticles
     }
 
-    addExampleBilboardParticleSystem(nParticles: number = 30) {
+    addExampleBilboardParticleSystem(nParticles: number = 40) {
         this.addChild(this.CreateBilboardParticleSystem(nParticles))
     }
 
@@ -110,7 +110,7 @@ export class MainSceneModel extends ExampleSceneModel {
         return this.waterSurfaceParticles
     }
 
-    addExampleBilboardParticleSystem3(nParticles: number = 80) {
+    addExampleBilboardParticleSystem3(nParticles: number = 200) {
         this.addChild(this.CreateBilboardParticleSystem3(nParticles))
     }
 
@@ -297,9 +297,9 @@ export class MainSceneModel extends ExampleSceneModel {
             else if (rock_x < this.terrain.heightMap.width * 5 / 8 && rock_x > this.terrain.heightMap.width / 2) {
                 rock_x = this.terrain.heightMap.width * 5 / 8
             }
-            let rock_y = Math.random() * this.terrain.heightMap.height / 2 + this.terrain.heightMap.height / 4
+            let rock_y = Math.random() * this.terrain.heightMap.height
 
-            this.terrain.playerInteraction(rock_x, rock_y, .1)
+            this.terrain.playerInteraction(rock_x, rock_y, .15)
         }
 
         let appState = GetAppState();
@@ -338,14 +338,16 @@ export class MainSceneModel extends ExampleSceneModel {
             t = args[0];
         }
 
-        if (t > startTime + 1) {
+        this.waterSurfaceParticles.timeUpdate(t, this.camera, "waterSurface");
+        /* if (t > startTime + 1) {
             this.waterSurfaceParticles.timeUpdate(t, this.camera, "waterSurface");
-        }
+        } */
         this.billboardWaterfallParticles.timeUpdate(t, this.camera, "waterfall");
         this.billboardMistParticles.timeUpdate(t, this.camera, "mist");
-        if (t > startTime + 1) {
+        this.billboardMistParticles2.timeUpdate(t, this.camera, "mist2");
+        /* if (t > startTime + 1) {
             this.billboardMistParticles2.timeUpdate(t, this.camera, "mist2");
-        }
+        } */
 
         // this zooms a bit too far rn
         // let pc = this.camera.position

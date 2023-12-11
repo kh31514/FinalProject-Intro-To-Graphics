@@ -186,7 +186,7 @@ export class TerrainModel extends ATerrainModel {
 
                     this.heightMap.setPixelNN(x, y, Math.random() * 0.05 + height);
                 }
-                else if (x > this.heightMap.width * 3.5 / 8 && x < this.heightMap.width * 4.5 / 8 && y < this.heightMap.height * 5 / 8) {
+                else if (x > this.heightMap.width * 3 / 8 && x < this.heightMap.width * 5 / 8 && y < this.heightMap.height * 5 / 8) {
                     // todo: make the elevation a little more natural here, maybe based on squared diff from center
                     let center_dist = Math.abs(x - this.heightMap.width / 2)
                     let stream_height = .5
@@ -209,10 +209,10 @@ export class TerrainModel extends ATerrainModel {
     playerInteraction(x: number, y: number, change: number) {
 
         //this.reRollRandomHeightMap(1)
-        for (let i = y - 5; i < y + 5; i++) {
-            for (let j = x - 5; j < x + 5; j++) {
+        for (let i = y - 10; i < y + 10; i++) {
+            for (let j = x - 10; j < x + 10; j++) {
                 let center_dist = Math.sqrt(Math.abs(y - i) ** 2 + Math.abs(x - j) ** 2)
-                let sigmoid_output = change / (1 + Math.exp(-center_dist + 3))
+                let sigmoid_output = change / (1 + Math.exp(-center_dist / 2 + 3))
                 this.heightMap.setPixelNN(j, i, this.heightMap.pixelData.getPixelNN(j, i) + change - sigmoid_output);
                 //this.heightMap.setPixelNN(j, i, 10);
             }
