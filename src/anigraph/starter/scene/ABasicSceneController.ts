@@ -1,46 +1,46 @@
-import {HasInteractionModeCallbacks} from "../../interaction";
-import {GetAppState} from "../../appstate";
-import {AInteractionMode} from "../../interaction";
-import {ASceneController, RenderTargetInterface} from "../../scene/ASceneController";
-import {ADebugInteractionMode, ASceneInteractionMode} from "../interactionmodes";
-import {AGLContext} from "../../rendering";
-import {ALoadedModel} from "../../scene/nodes/loaded/ALoadedModel";
-import {ALoadedView} from "../../scene/nodes/loaded/ALoadedView";
-import {RGBATestMeshModel, RGBATestMeshView} from "../nodes";
-import {ANodeModel3D, ANodeView, ATriangleMeshModel, ATriangleMeshView, UnitQuadModel, UnitQuadView} from "../../scene";
-import {APointLightModel, APointLightView} from "../../scene/lights";
+import { HasInteractionModeCallbacks } from "../../interaction";
+import { GetAppState } from "../../appstate";
+import { AInteractionMode } from "../../interaction";
+import { ASceneController, RenderTargetInterface } from "../../scene/ASceneController";
+import { ADebugInteractionMode, ASceneInteractionMode } from "../interactionmodes";
+import { AGLContext } from "../../rendering";
+import { ALoadedModel } from "../../scene/nodes/loaded/ALoadedModel";
+import { ALoadedView } from "../../scene/nodes/loaded/ALoadedView";
+import { RGBATestMeshModel, RGBATestMeshView } from "../nodes";
+import { ANodeModel3D, ANodeView, ATriangleMeshModel, ATriangleMeshView, UnitQuadModel, UnitQuadView } from "../../scene";
+import { APointLightModel, APointLightView } from "../../scene/lights";
 import * as THREE from "three";
-import {AVisiblePointLightModel} from "../../scene/lights/AVisiblePointLightModel";
+import { AVisiblePointLightModel } from "../../scene/lights/AVisiblePointLightModel";
 import { AVisiblePointLightView } from "src/anigraph/scene/lights/AVisiblePointLightView";
-import {Mat3, Quaternion} from "src/anigraph/math";
-import {ARenderTarget} from "../../rendering/multipass/ARenderTarget";
+import { Mat3, Quaternion } from "src/anigraph/math";
+import { ARenderTarget } from "../../rendering/multipass/ARenderTarget";
 const INTERACTION_MODE_APP_STATE = "InteractionMode";
 
 export abstract class ABasicSceneController extends ASceneController {
     //#############################//--Render Targets--\\#############################
     //<editor-fold desc="Render Targets">
-    _renderTargets:ARenderTarget[]=[];
-    get renderTargets(){
+    _renderTargets: ARenderTarget[] = [];
+    get renderTargets() {
         return this._renderTargets;
     }
 
-    _currentRenderTarget:ARenderTarget|null=null;
-    get currentRenderTarget(){
+    _currentRenderTarget: ARenderTarget | null = null;
+    get currentRenderTarget() {
         return this._currentRenderTarget;
     }
-    set currentRenderTarget(renderTarget:ARenderTarget|null){
-        this.setCurrentRenderTarget((renderTarget==undefined)?null:renderTarget);
+    set currentRenderTarget(renderTarget: ARenderTarget | null) {
+        this.setCurrentRenderTarget((renderTarget == undefined) ? null : renderTarget);
     }
 
-    addRenderTarget(width:number, height:number){
+    addRenderTarget(width: number, height: number) {
         this.renderTargets.push(ARenderTarget.CreateFloatRGBATarget(width, height));
     }
 
-    setCurrentRenderTarget(renderTarget?:ARenderTarget|null){
-        if(renderTarget !== undefined && renderTarget !== null) {
+    setCurrentRenderTarget(renderTarget?: ARenderTarget | null) {
+        if (renderTarget !== undefined && renderTarget !== null) {
             this.renderer.setRenderTarget(renderTarget.target)
-            this._currentRenderTarget=renderTarget;
-        }else{
+            this._currentRenderTarget = renderTarget;
+        } else {
             this.renderer.setRenderTarget(null);
         }
     }
@@ -52,7 +52,7 @@ export abstract class ABasicSceneController extends ASceneController {
 
     //###############################################//--Defining Interaction Modes--\\###############################################
     //<editor-fold desc="Defining Interaction Modes">
-    _silentSetCurrentInteractionMode(name?:string){
+    _silentSetCurrentInteractionMode(name?: string) {
         super.setCurrentInteractionMode(name);
     }
 
@@ -74,33 +74,35 @@ export abstract class ABasicSceneController extends ASceneController {
         this.addModelViewSpec(AVisiblePointLightModel, AVisiblePointLightView);
     }
 
-    initSkyBoxCubeMap(path?:string, format?:string, transform?:Mat3, ...args:any[]):void;
-    initSkyBoxCubeMap(uls?:string[], transform?:Quaternion, ...args:any[]):void;
-    initSkyBoxCubeMap(...args:any[]){
-        let urls=[];
+    initSkyBoxCubeMap(path?: string, format?: string, transform?: Mat3, ...args: any[]): void;
+    initSkyBoxCubeMap(uls?: string[], transform?: Quaternion, ...args: any[]): void;
+    initSkyBoxCubeMap(...args: any[]) {
+        let urls = [];
         // let DefaultPath = './images/cube/MilkyWay/dark-s_';
         let DefaultPath = './images/cube/skyboxsun25deg/';
         let DefaultFormat = '.jpg';
-        let transform:Quaternion|undefined;
+        let transform: Quaternion | undefined;
         let urlDict = {
-            left:"px",
-            right:"nx",
-            top:"py",
-            bottom:"ny",
-            back:"pz",
-            front:"nz"
+            left: "px",
+            right: "nx",
+            top: "py",
+            bottom: "ny",
+            back: "pz",
+            front: "nz"
         }
 
-        if(args.length>0){
-            if(Array.isArray(args[0])){
+        transform = Quaternion.RotationX(Math.PI * 0.5);
+
+        if (args.length > 0) {
+            if (Array.isArray(args[0])) {
                 urls = args[0];
-            }else{
-                let path = args[0]??DefaultPath;
+            } else {
+                let path = args[0] ?? DefaultPath;
                 let format = '.jpg';
-                if(args.length>1){
-                    format = args[1]??format;
+                if (args.length > 1) {
+                    format = args[1] ?? format;
                 }
-                if(args.length>2){
+                if (args.length > 2) {
                     transform = args[2];
                 }
                 urls = [
@@ -113,10 +115,10 @@ export abstract class ABasicSceneController extends ASceneController {
                 ];
 
             }
-        }else {
+        } else {
             let path = DefaultPath;
             let format = DefaultFormat;
-            transform = Quaternion.RotationX(Math.PI*0.5);
+            transform = Quaternion.RotationX(Math.PI * 0.5);
             urls = [
                 path + 'px' + format,
                 path + 'nx' + format,
@@ -131,32 +133,33 @@ export abstract class ABasicSceneController extends ASceneController {
          * If you want to change the skybox, you will need to provide the appropriate urls to the corresponding textures
          * from a cube map
          */
-        if(transform!==undefined) {
+        if (transform !== undefined) {
             this.view.setBackgroundTransform(transform);
         }
-        const reflectionCube = new THREE.CubeTextureLoader().load( urls );
+        const reflectionCube = new THREE.CubeTextureLoader().load(urls);
         this.getThreeJSScene().background = reflectionCube;
+
     }
 
-    addDebugInteractionMode(){
+    addDebugInteractionMode() {
         let debugInteractionMode = new ADebugInteractionMode(this);
         this.defineInteractionMode(ADebugInteractionMode.NameInGUI, debugInteractionMode);
         this.setCurrentInteractionMode(ADebugInteractionMode.NameInGUI);
     }
 
-    switchToDebugInteractionMode(){
-        if(!this._interactions.modeIsDefined(ADebugInteractionMode.NameInGUI)){
+    switchToDebugInteractionMode() {
+        if (!this._interactions.modeIsDefined(ADebugInteractionMode.NameInGUI)) {
             this.addDebugInteractionMode();
-        }else{
+        } else {
             this.setCurrentInteractionMode(ADebugInteractionMode.NameInGUI);
         }
 
     }
 
 
-    addInteractionModeAppState(){
+    addInteractionModeAppState() {
         const self = this;
-        this.subscribeToAppState(INTERACTION_MODE_APP_STATE, (v:string)=>{
+        this.subscribeToAppState(INTERACTION_MODE_APP_STATE, (v: string) => {
             /**
              * Call _setCurrentInteractionMode here, which just calls the parent version of the function.
              * This is to avoid an infinite loop caused by calling _updateInteractionModeOptions
@@ -165,7 +168,7 @@ export abstract class ABasicSceneController extends ASceneController {
         }, INTERACTION_MODE_APP_STATE)
     }
 
-    initInteractions(){
+    initInteractions() {
         this.setCurrentInteractionMode();
         this.addInteractionModeAppState();
         this.addDebugInteractionMode();
@@ -176,12 +179,12 @@ export abstract class ABasicSceneController extends ASceneController {
         this._updateInteractionModeOptions();
     }
 
-    deleteInteractionMode(name: string){
+    deleteInteractionMode(name: string) {
         this._interactions.undefineMode(name);
         this._updateInteractionModeOptions();
     }
 
-    _updateInteractionModeOptions(){
+    _updateInteractionModeOptions() {
         let appState = GetAppState();
         appState.setSelectionControl(
             INTERACTION_MODE_APP_STATE,
@@ -192,10 +195,10 @@ export abstract class ABasicSceneController extends ASceneController {
     }
 
     createNewInteractionMode(
-        name:string,
-        interactionCallbacks?:HasInteractionModeCallbacks
-    ){
-        if(this._interactions.modes[name]){
+        name: string,
+        interactionCallbacks?: HasInteractionModeCallbacks
+    ) {
+        if (this._interactions.modes[name]) {
             throw new Error(`Tried to create interaction mode "${name}", but mode with this name is already defined!`)
         }
         let newInteractionMode = new ASceneInteractionMode(name, this, interactionCallbacks);
@@ -203,13 +206,13 @@ export abstract class ABasicSceneController extends ASceneController {
     }
 
 
-    timeUpdate(){
+    timeUpdate() {
         this.interactionMode.timeUpdate(this.time);
     }
 
 
-    onAnimationFrameCallback(context:AGLContext) {
-        if(!this.readyToRender){
+    onAnimationFrameCallback(context: AGLContext) {
+        if (!this.readyToRender) {
             return;
         }
 

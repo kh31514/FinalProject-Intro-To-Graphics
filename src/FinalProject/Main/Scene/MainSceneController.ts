@@ -16,6 +16,7 @@ import { Color, Mat3, V3 } from "src/anigraph";
 import { ExampleClickInteractionMode } from "src/FinalProject/Examples";
 import { AppState } from "../../../anigraph";
 import { GetAppState } from "../../../anigraph";
+import { Quaternion } from "../../../anigraph";
 
 const SelectionOptions = [
     "Daytime",
@@ -50,13 +51,13 @@ export class MainSceneController extends ExampleSceneController {
             (selection: any) => {
                 switch (selection) {
                     case SelectionOptions[0]:
-                        this.initSkyBoxCubeMap();
+                        this.initSkyBoxCubeMap("./images/cube/skyboxsun25deg/");
                         break;
                     case SelectionOptions[1]:
                         this.initSkyBoxCubeMap("./images/cube/spaceface/");
                         break;
                     case SelectionOptions[2]:
-                        this.initSkyBoxCubeMap("./images/cube/Park2/");
+                        this.initSkyBoxCubeMap("./images/cube/Park1/");
                         break;
                 }
             }), "Sky");
