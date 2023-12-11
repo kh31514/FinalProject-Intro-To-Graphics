@@ -143,6 +143,8 @@ export class MainSceneModel extends ExampleSceneModel {
     initScene() {
         //lighting
         this.addViewLight();
+        this.backgroundLight = new APointLightModel(new NodeTransform3D(V3(0,0,6)), Color.FromString("#FFA500"),0.3, 1, 2);
+        this.addChild(this.backgroundLight);
 
 
         this.initTerrain("rock");
