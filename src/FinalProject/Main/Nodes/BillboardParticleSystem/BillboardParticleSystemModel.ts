@@ -130,7 +130,7 @@ export class BillboardParticleSystemModel extends AInstancedParticleSystemModel<
         // let startPosition = this.getWorldTransform().c3.Point3D;
         // y 3 4
         // x -0.5 0.5
-        let rand_x = Math.random() - 0.5;
+        let rand_x = (Math.random() - 0.5) / 2;
         let startPosition = V3(rand_x, 3.0, 1.3);
 
         if (type === "mist2") {
