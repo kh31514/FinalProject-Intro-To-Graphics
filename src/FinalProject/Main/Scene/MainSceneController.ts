@@ -67,8 +67,8 @@ export class MainSceneController extends ExampleSceneController {
     initInteractions() {
         super.initInteractions();
         this.initExampleInteractions();
-        this.defineInteractionMode("ExampleClick", ExampleClickInteractionMode.Create(this));
-        this.setCurrentInteractionMode("ExampleClick")
+        // this.defineInteractionMode("ExampleClick", ExampleClickInteractionMode.Create(this));
+        // this.setCurrentInteractionMode("ExampleClick")
     }
 
 }
