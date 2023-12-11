@@ -14,7 +14,14 @@ import { CustomInteractionMode } from "../InteractionModes/CustomInteractionMode
 import { ExampleSceneController } from "src/FinalProject/Examples/Apps/ExampleSceneController";
 import { Color, Mat3, V3 } from "src/anigraph";
 import { ExampleClickInteractionMode } from "src/FinalProject/Examples";
+import { AppState } from "../../../anigraph";
+import { GetAppState } from "../../../anigraph";
 
+const SelectionOptions = [
+    "Daytime",
+    "Space",
+    "Park"
+]
 
 export class MainSceneController extends ExampleSceneController {
     get model(): MainSceneModel {
@@ -37,7 +44,23 @@ export class MainSceneController extends ExampleSceneController {
 
     async initScene(): Promise<void> {
         await super.initScene()
-        this.initSkyBoxCubeMap();
+
+        let appState = GetAppState();
+        this.subscribe(appState.addStateValueListener("Sky",
+            (selection: any) => {
+                switch (selection) {
+                    case SelectionOptions[0]:
+                        this.initSkyBoxCubeMap();
+                        break;
+                    case SelectionOptions[1]:
+                        this.initSkyBoxCubeMap("./images/cube/spaceface/");
+                        break;
+                    case SelectionOptions[2]:
+                        this.initSkyBoxCubeMap("./images/cube/Park2/");
+                        break;
+                }
+            }), "Sky");
+        // this.initSkyBoxCubeMap();
         // this.setClearColor(Color.FromString("#F0FFFF"));
     }
 

@@ -21,6 +21,12 @@ const SelectionOptions = [
     "Lab Cat Land"
 ]
 
+const SkySelectionOptions = [
+    "Daytime",
+    "Space",
+    "Park"
+]
+
 let startTime = 0;
 
 export class MainSceneModel extends ExampleSceneModel {
@@ -29,7 +35,7 @@ export class MainSceneModel extends ExampleSceneModel {
     billboardMistParticles2!: BillboardParticleSystemModel;
     waterSurfaceParticles!: ParticleSystemModel;
 
-    backgroundLight!:APointLightModel;
+    backgroundLight!: APointLightModel;
 
 
     latency: number = 1;
@@ -49,6 +55,12 @@ export class MainSceneModel extends ExampleSceneModel {
             "Terrain",
             "default",
             SelectionOptions
+        )
+
+        appState.setSelectionControl(
+            "Sky",
+            "default",
+            SkySelectionOptions
         )
     }
 
@@ -143,7 +155,7 @@ export class MainSceneModel extends ExampleSceneModel {
     initScene() {
         //lighting
         this.addViewLight();
-        this.backgroundLight = new APointLightModel(new NodeTransform3D(V3(0,0,6)), Color.FromString("#FFA500"),0.3, 1, 2);
+        this.backgroundLight = new APointLightModel(new NodeTransform3D(V3(0, 0, 6)), Color.FromString("#FFA500"), 0.3, 1, 2);
         this.addChild(this.backgroundLight);
 
 
